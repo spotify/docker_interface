@@ -1,0 +1,47 @@
+{
+    "build": {
+        "build-arg": {
+            "arg": "value"
+        },
+        "file": "#{path}/Dockerfile.test",
+        "no-cache": true,
+        "tag": "di-test",
+        "quiet": false,
+        "cpu-shares": 3,
+        "memory": "1G"
+    },
+    "run": {
+        "env": {
+            "my_variable": "Hello world!",
+            "TMPDIR": null
+        },
+        "env-file": [
+            ".env.test"
+        ],
+        "mount": [
+            {
+                "type": "bind",
+                "destination": "/bind",
+                "source": "."
+            }
+        ],
+        "publish": [
+            {
+                "host": 52729,
+                "container": 8888
+            }
+        ],
+        "tmpfs": [
+            {
+                "destination": "/tmpfs",
+                "options": ["exec"]
+            }
+        ],
+        "tty": true,
+        "interactive": true,
+        "memory": "2G"
+    },
+    "plugins": {
+        "enable": ["user"]
+    }
+}
