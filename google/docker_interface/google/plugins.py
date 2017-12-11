@@ -25,6 +25,7 @@ class GoogleDockerAuthorizationPlugin(ExecutePlugin):
     # We want to authorize before any other plugins that may depend on access to Google's services.
     ORDER = 10
     COMMANDS = ['run']
+    ENABLED = False
 
     def build_command(self, configuration):
         return ['gcloud', 'docker', '--authorize-only', '--quiet']
