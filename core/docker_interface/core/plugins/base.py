@@ -216,8 +216,6 @@ class BasePlugin(Plugin):
     def apply(self, configuration, schema, args):
         # Load the configuration
         if os.path.isfile(args.file):
-            assert configuration is None, \
-                "configuration passed to the base plugin must be undefined"
             filename = os.path.abspath(args.file)
             with open(filename) as fp:
                 configuration = yaml.load(fp)

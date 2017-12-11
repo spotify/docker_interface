@@ -18,6 +18,14 @@ Properties
 * log-level (:code:`string`): 
 * plugins: 
 
+GoogleDockerAuthorizationPlugin
+-------------------------------
+
+
+Configure docker authorization for Google services such as Google Container Registry.
+
+
+
 WorkspaceMountPlugin
 --------------------
 
@@ -135,6 +143,14 @@ By default, the plugin provides environment variables using the :code:`env` pref
 a value could reference the user name on the host using :code:`${env/USER}`. Other plugins can
 provide variables for substitution by extending the :code:`VARIABLES` class attribute and should
 do so using a unique prefix.
+
+
+
+ValidationPlugin
+----------------
+
+
+Validate the configuration document.
 
 
 

@@ -5,13 +5,13 @@ SPHINXPROJ    = docker_interface
 SOURCEDIR     = docs
 BUILDDIR      = docs/_build
 
+tests : code_tests
+
 code_tests :
 	py.test --cov docker_interface.core --cov docker_interface.google --cov-report=html --cov-report=term-missing
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-
-.PHONY: help Makefile docs/plugin_reference.rst clean
 
 docs/plugin_reference.rst : docs/generate_plugin_reference.py
 	python $<
@@ -23,3 +23,5 @@ html : Makefile docs/plugin_reference.rst
 
 clean :
 	rm -rf docs/_build
+
+.PHONY: help Makefile docs/plugin_reference.rst clean tests code_tests
