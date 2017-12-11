@@ -84,6 +84,9 @@ def build_docker_build_command(configuration):
 
     build = configuration.pop('build')
 
+    build['path'] = os.path.join(configuration['workspace'], build['path'])
+    build['file'] = os.path.join(build['path'], build['file'])
+
     parts.extend(build_parameter_parts(
         build, 'tag', 'file', 'no-cache', 'quiet', 'cpu-shares', 'memory'))
 
