@@ -194,6 +194,7 @@ class RunConfigurationPlugin(Plugin):
         self.add_argument(parser, '/run/cmd', name='cmd', nargs=argparse.REMAINDER, type=None)
 
     def apply(self, configuration, schema, args):
+        super(RunConfigurationPlugin, self).apply(configuration, schema, args)
         # Set some sensible defaults (could also be published as variables)
         json_util.set_default(configuration, '/run/tty', sys.stdout.isatty())
         json_util.set_default(configuration, '/run/interactive', sys.stdout.isatty())
