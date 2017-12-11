@@ -1,5 +1,5 @@
 import os
-from docker_interface.core.plugins import Plugin
+from docker_interface.core.plugins import Plugin, ExecutePlugin
 
 
 class GoogleCloudCredentialsPlugin(Plugin):
@@ -18,7 +18,7 @@ class GoogleCloudCredentialsPlugin(Plugin):
         return configuration
 
 
-class GoogleDockerAuthorizationPlugin(Plugin):
+class GoogleDockerAuthorizationPlugin(ExecutePlugin):
     """
     Configure docker authorization for Google services such as Google Container Registry.
     """
@@ -26,7 +26,5 @@ class GoogleDockerAuthorizationPlugin(Plugin):
     ORDER = 10
     COMMANDS = ['run']
 
-    def apply(self, configuration, schema, args):
-        parts = ['gcloud', 'docker', '--authorize-only']
-        os.spawnvpe(os.P_WAIT, parts[0], parts, os.environ)
-        return configuration
+    def build_command(self, configuration):
+        return ['gcloud', 'docker', '--authorize-only', '--quiet']

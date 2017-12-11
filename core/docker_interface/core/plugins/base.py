@@ -111,8 +111,12 @@ class ExecutePlugin(Plugin):
         raise NotImplementedError
 
     def add_arguments(self, parser):
-        parser.add_argument('--dry-run', '-n', help="don't run any commands; just print them",
-                            action='store_true')
+        try:
+            parser.add_argument('--dry-run', '-n', help="don't run any commands; just print them",
+                                action='store_true')
+        except argparse.ArgumentError as ex:
+            if 'conflict' not in str(ex):
+                raise
 
     def apply(self, configuration, schema, args):
         super(ExecutePlugin, self).apply(configuration, schema, args)
