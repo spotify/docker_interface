@@ -80,23 +80,12 @@ class Plugin:
         return plugin_cls
 
 
-class ExecutePlugin(Plugin):
+class ValidationPlugin(Plugin):
     """
-    Base class for plugins that execute shell commands.
-
-    Inheriting classes should define the static method :code:`BUILD_COMMAND` which takes a
-    configuration document as its only argument.
+    Validate the configuration document.
     """
-    @staticmethod
-    def BUILD_COMMAND(configuration):
-        """
-        Static method that returns command parts.
-        """
-        raise NotImplementedError
-
-    def add_arguments(self, parser):
-        parser.add_argument('--dry-run', '-n', help="don't run any commands; just print them",
-                            action='store_true')
+    COMMANDS = 'all'
+    ORDER = 990
 
     def apply(self, configuration, schema, args):
         validator = jsonschema.validators.validator_for(schema)(schema)
@@ -105,9 +94,29 @@ class ExecutePlugin(Plugin):
             for error in errors:
                 self.logger.fatal(error.message)
             raise ValueError("failed to validate configuration")
+        return configuration
 
+
+class ExecutePlugin(Plugin):
+    """
+    Base class for plugins that execute shell commands.
+
+    Inheriting classes should define the method :code:`build_command` which takes a configuration
+    document as its only argument.
+    """
+    def build_command(self, configuration):
+        """
+        Construct a command and return its parts.
+        """
+        raise NotImplementedError
+
+    def add_arguments(self, parser):
+        parser.add_argument('--dry-run', '-n', help="don't run any commands; just print them",
+                            action='store_true')
+
+    def apply(self, configuration, schema, args):
         super(ExecutePlugin, self).apply(configuration, schema, args)
-        parts = self.BUILD_COMMAND(configuration)
+        parts = self.build_command(configuration)
         self.execute_command(parts, args.dry_run)
         return configuration
 
@@ -184,7 +193,8 @@ class BasePlugin(Plugin):
                                     "type": "string"
                                 }
                             }
-                        }
+                        },
+                        "additionalProperties": False
                     }
                 ]
             }
@@ -244,7 +254,7 @@ class SubstitutionPlugin(Plugin):
     REF_PATTERN = re.compile(r'#\{(?P<path>.*?)\}')
     VAR_PATTERN = re.compile(r'\$\{(?P<path>.*?)\}')
     COMMANDS = 'all'
-    ORDER = 990
+    ORDER = 980
     VARIABLES = {
         'env': dict(os.environ)
     }

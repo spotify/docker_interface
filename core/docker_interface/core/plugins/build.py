@@ -8,7 +8,7 @@ class BuildPlugin(ExecutePlugin):
     """
     COMMANDS = ['build']
     ORDER = 1000
-    BUILD_COMMAND = staticmethod(build_docker_build_command)
+    build_command = staticmethod(build_docker_build_command)
 
 
 class BuildConfigurationPlugin(Plugin):

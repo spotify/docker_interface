@@ -11,7 +11,7 @@ class RunPlugin(ExecutePlugin):
     """
     COMMANDS = ['run']
     ORDER = 1000
-    BUILD_COMMAND = staticmethod(build_docker_run_command)
+    build_command = staticmethod(build_docker_run_command)
 
 
 class RunConfigurationPlugin(Plugin):

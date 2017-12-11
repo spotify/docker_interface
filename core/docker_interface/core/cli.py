@@ -30,10 +30,15 @@ def entry_point(args=None, configuration=None):
     else:
         # Disable and enable specific plugins
         if isinstance(plugins, dict):
-            for name in plugins.get('enable', []):
-                plugin_cls[name].ENABLED = True
-            for name in plugins.get('disable', []):
-                plugin_cls[name].ENABLED = False
+            try:
+                for name in plugins.get('enable', []):
+                    plugin_cls[name].ENABLED = True
+                for name in plugins.get('disable', []):
+                    plugin_cls[name].ENABLED = False
+            except KeyError as ex:
+                logger.fatal("could not resolve plugin %s. Available plugins: %s",
+                             ex, ", ".join(plugin_cls))
+                return 2
         elif plugins is not None:
             logger.fatal("'plugins' must be a `list`, `dict`, or `None` but got `%s`",
                          type(plugins))

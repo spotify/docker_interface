@@ -2,7 +2,7 @@ from setuptools import setup
 
 PLUGINS = [
     'Run', 'Build', 'WorkspaceMount', 'Substitution', 'User', 'HomeDir', 'RunConfiguration',
-    'BuildConfiguration'
+    'BuildConfiguration', 'Validation'
 ]
 
 setup(
