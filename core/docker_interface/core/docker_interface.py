@@ -72,8 +72,6 @@ def build_docker_run_command(configuration):
     parts.append(run.pop('image'))
     parts.extend(run.pop('cmd', []))
 
-    assert not run, "unprocessed configuration keys: %s" % ", ".join(run)
-
     return parts
 
 
@@ -89,12 +87,7 @@ def build_docker_build_command(configuration):
     parts.extend(build_parameter_parts(
         build, 'tag', 'file', 'no-cache', 'quiet', 'cpu-shares', 'memory'))
 
-    #for item in build.pop('build-arg', {}).items():
-    #    parts.extend(['--build-arg', "%s=%s" % item])
     parts.extend(build_dict_parameter_parts(build, 'build-arg'))
-
     parts.append(build.pop('path'))
-
-    assert not build, "unprocessed configuration keys: %s" % ", ".join(build)
 
     return parts

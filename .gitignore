@@ -106,3 +106,4 @@ venv.bak/
 playground/
 .vscode/
 .DS_Store
+di.yml

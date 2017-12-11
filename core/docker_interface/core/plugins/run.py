@@ -1,17 +1,22 @@
 import argparse
+import sys
 from ..docker_interface import build_docker_run_command
+from .. import json_util
 from .base import Plugin, ExecutePlugin
 
 
-class ExecuteRunPlugin(ExecutePlugin):
+class RunPlugin(ExecutePlugin):
+    """
+    Run a command inside a docker container.
+    """
     COMMANDS = ['run']
     ORDER = 1000
     BUILD_COMMAND = staticmethod(build_docker_run_command)
 
 
-class RunPlugin(Plugin):
+class RunConfigurationPlugin(Plugin):
     """
-    Run a command inside a docker container.
+    Configure how to run a command inside a docker container.
     """
     COMMANDS = ['run']
     ORDER = 950
@@ -156,7 +161,8 @@ class RunPlugin(Plugin):
                     },
                     "rm": {
                         "type": "boolean",
-                        "description": "Automatically remove the container when it exits"
+                        "description": "Automatically remove the container when it exits",
+                        "default": True
                     },
                     "memory": {
                         "type": "string",
@@ -184,5 +190,11 @@ class RunPlugin(Plugin):
     }
 
     def add_arguments(self, parser):
-        super(RunPlugin, self).add_arguments(parser)
+        super(RunConfigurationPlugin, self).add_arguments(parser)
         self.add_argument(parser, '/run/cmd', name='cmd', nargs=argparse.REMAINDER, type=None)
+
+    def apply(self, configuration, schema, args):
+        # Set some sensible defaults (could also be published as variables)
+        json_util.set_default(configuration, '/run/tty', sys.stdout.isatty())
+        json_util.set_default(configuration, '/run/interactive', sys.stdout.isatty())
+        return configuration

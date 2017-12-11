@@ -3,19 +3,36 @@ import grp
 import os
 
 from .base import Plugin, SubstitutionPlugin
-from .run import RunPlugin
+from .run import RunConfigurationPlugin
 from .. import json_util
 
 
 class UserPlugin(Plugin):
     """
     Share the host user id and group id with the container.
+
+    The plugin provides the following additional variables for substitution:
+
+    * :code:`user/name`: Name of the user on the host.
+    * :code:`user/uid`: User id of the user on the host.
+    * :code:`group/name`: Name of the user group on the host.
+    * :code:`group/gid`: Group id of the user group on the host.
     """
     COMMANDS = ['run']
     ORDER = 510
+    SCHEMA = {
+        "properties": {
+            "run": {
+                "properties": {
+                    "user": json_util.get_value(
+                        RunConfigurationPlugin.SCHEMA, '/properties/run/properties/user')
+                }
+            }
+        }
+    }
 
     def add_arguments(self, parser):
-        self.add_argument(parser, '/run/user', schema=RunPlugin.SCHEMA)
+        self.add_argument(parser, '/run/user')
 
     def get_user_group(self, user=None, group=None):
         """

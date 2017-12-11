@@ -1,19 +1,19 @@
-import sys
-
 from .base import Plugin, ExecutePlugin
 from ..docker_interface import build_docker_build_command
-from .. import json_util
 
 
-class ExecuteBuildPlugin(ExecutePlugin):
+class BuildPlugin(ExecutePlugin):
+    """
+    Build a docker image.
+    """
     COMMANDS = ['build']
     ORDER = 1000
     BUILD_COMMAND = staticmethod(build_docker_build_command)
 
 
-class BuildPlugin(Plugin):
+class BuildConfigurationPlugin(Plugin):
     """
-    Build a docker image.
+    Configure how to build a docker image.
     """
     COMMANDS = ['build']
     ORDER = 950
@@ -67,9 +67,3 @@ class BuildPlugin(Plugin):
             }
         }
     }
-
-    def apply(self, configuration, schema, args):
-        # Set some sensible defaults (could also be published as variables)
-        json_util.set_default(configuration, '/run/tty', sys.stdout.isatty())
-        json_util.set_default(configuration, '/run/interactive', sys.stdout.isatty())
-        return configuration

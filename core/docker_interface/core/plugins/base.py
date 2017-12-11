@@ -1,13 +1,13 @@
 import argparse
 import functools as ft
 import itertools as it
-import json
 import logging
 import os
 import re
 
 import jsonschema
 import pkg_resources
+import yaml
 
 from .. import json_util
 
@@ -18,7 +18,7 @@ class Plugin:
     """
     ENABLED = True
     SCHEMA = {}
-    PRIORITY = None
+    ORDER = None
     COMMANDS = None
 
     def __init__(self):
@@ -83,6 +83,9 @@ class Plugin:
 class ExecutePlugin(Plugin):
     """
     Base class for plugins that execute shell commands.
+
+    Inheriting classes should define the static method :code:`BUILD_COMMAND` which takes a
+    configuration document as its only argument.
     """
     @staticmethod
     def BUILD_COMMAND(configuration):
@@ -133,7 +136,7 @@ class ExecutePlugin(Plugin):
 
 class BasePlugin(Plugin):
     """
-    Basic plugin for declarative docker.
+    Load or create a default configuration and set up logging.
     """
     SCHEMA = {
         "title": "Declarative Docker Interface (DI) definition.",
@@ -189,7 +192,7 @@ class BasePlugin(Plugin):
     }
 
     def add_arguments(self, parser):
-        parser.add_argument('--file', '-f', help='Configuration file.')
+        parser.add_argument('--file', '-f', help='Configuration file.', default='di.yml')
         self.add_argument(parser, '/workspace')
         self.add_argument(parser, '/docker')
         self.add_argument(parser, '/log-level')
@@ -198,20 +201,20 @@ class BasePlugin(Plugin):
 
     def apply(self, configuration, schema, args):
         # Load the configuration
-        if args.file is None:
-            self.logger.warning(
-                "using empty configuration because no '.di' file could be found")
-            configuration = configuration or {}
-            configuration.setdefault('workspace', os.getcwd())
-        elif os.path.isfile(args.file):
+        if os.path.isfile(args.file):
             assert configuration is None, \
                 "configuration passed to the base plugin must be undefined"
             filename = os.path.abspath(args.file)
             with open(filename) as fp:
-                configuration = json.load(fp)
+                configuration = yaml.load(fp)
             self.logger.debug("loaded configuration from '%s'", filename)
             configuration['workspace'] = configuration.get(
                 'workspace', os.path.dirname(filename))
+        elif args.file == 'di.yml':
+            self.logger.warning(
+                "using empty configuration because no 'di.yml' file could be found")
+            configuration = configuration or {}
+            configuration.setdefault('workspace', os.getcwd())
         else:
             raise FileNotFoundError(
                 "could not find configuration file '%s'" % args.file)
@@ -222,14 +225,21 @@ class BasePlugin(Plugin):
         return configuration
 
 
-
-
-
-
-
 class SubstitutionPlugin(Plugin):
     """
-    Variable substitution in strings.
+    Substitute variables in strings.
+
+    String values in the configuration document may
+
+    * reference other parts of the configuration document using :code:`#{path}`, where :code:`path`
+      may be an absolute or relative path in the document.
+    * reference a variable using :code:`${path}`, where :code:`path` is assumed to be an absolute
+      path in the :code:`VARIABLES` class attribute of the plugin.
+
+    By default, the plugin provides environment variables using the :code:`env` prefix. For example,
+    a value could reference the user name on the host using :code:`${env/USER}`. Other plugins can
+    provide variables for substitution by extending the :code:`VARIABLES` class attribute and should
+    do so using a unique prefix.
     """
     REF_PATTERN = re.compile(r'#\{(?P<path>.*?)\}')
     VAR_PATTERN = re.compile(r'\$\{(?P<path>.*?)\}')
@@ -239,15 +249,18 @@ class SubstitutionPlugin(Plugin):
         'env': dict(os.environ)
     }
 
-    def substitute_variables(self, configuration, value, ref):
+    def _substitute_variables(self, configuration, value, ref):
         if isinstance(value, str):
             while True:
                 match = self.REF_PATTERN.search(value)
                 if match is None:
                     break
                 path = os.path.join(os.path.dirname(ref), match.group('path'))
-                value = value.replace(
-                    match.group(0), str(json_util.get_value(configuration, path)))
+                try:
+                    value = value.replace(
+                        match.group(0), str(json_util.get_value(configuration, path)))
+                except KeyError:
+                    raise KeyError(path)
 
             while True:
                 match = self.VAR_PATTERN.search(value)
@@ -260,7 +273,7 @@ class SubstitutionPlugin(Plugin):
 
     def apply(self, configuration, schema, args):
         super(SubstitutionPlugin, self).apply(configuration, schema, args)
-        return json_util.apply(configuration, ft.partial(self.substitute_variables, configuration))
+        return json_util.apply(configuration, ft.partial(self._substitute_variables, configuration))
 
 
 class WorkspaceMountPlugin(Plugin):
@@ -275,6 +288,9 @@ class WorkspaceMountPlugin(Plugin):
                         "type": "string",
                         "description": 'Path at which to mount the workspace in the container.',
                         "default": "/workspace"
+                    },
+                    "workdir": {
+                        "default": "#{workspace-dir}"
                     }
                 }
             }
@@ -290,7 +306,7 @@ class WorkspaceMountPlugin(Plugin):
         configuration['run'].setdefault('mount', []).append({
             'type': 'bind',
             'source': '#{/workspace}',
-            'destination': json_util.pop_value(configuration, '/run/workspace-dir')
+            'destination': json_util.get_value(configuration, '/run/workspace-dir')
         })
         return configuration
 
@@ -308,5 +324,4 @@ class HomeDirPlugin(Plugin):
             'options': ['exec']
         })
         configuration['run'].setdefault('env', {}).setdefault('HOME', '/${user/name}')
-        print(configuration['run']['env'])
         return configuration
