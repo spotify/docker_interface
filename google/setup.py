@@ -14,5 +14,8 @@ setup(
             '%s = docker_interface.google.plugins:%sPlugin' % (name.lower(), name)
             for name in PLUGINS
         ],
-    }
+    },
+    author="Till Hoffmann",
+    author_email="till@spotify.com",
+    url="https://ghe.spotify.net/till/docker_interface/",
 )
