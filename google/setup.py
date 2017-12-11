@@ -1,6 +1,6 @@
 from setuptools import setup
 
-PLUGINS = ['GoogleCloudCredentials']
+PLUGINS = ['GoogleCloudCredentials', 'GoogleDockerAuthorization']
 
 setup(
     name="docker_interface_google",
@@ -11,7 +11,8 @@ setup(
     ],
     entry_points={
         'docker_interface.plugins': [
-            '%s = docker_interface.google.plugins:%sPlugin' % (name.lower(), name) for name in PLUGINS
+            '%s = docker_interface.google.plugins:%sPlugin' % (name.lower(), name)
+            for name in PLUGINS
         ],
     }
 )
