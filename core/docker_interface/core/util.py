@@ -1,4 +1,6 @@
+import contextlib
 import os
+import socket
 
 
 TYPES = {
@@ -113,3 +115,13 @@ def apply(instance, func, path=None):
     elif isinstance(instance, dict):
         return {key: apply(value, func, os.path.join(path, key)) for key, value in instance.items()}
     return func(instance, path)
+
+
+def get_free_port():
+    """
+    Get a free port
+    """
+    with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as _socket:
+        _socket.bind(('', 0))
+        address, port = _socket.getsockname()
+        return port
