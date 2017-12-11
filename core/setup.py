@@ -11,7 +11,7 @@ setup(
     packages=['docker_interface.core'],
     install_requires=[
         'jsonschema==2.6.0',
-        'PyYAML==3.12',
+        'pyaml==17.10.0',
     ],
     entry_points={
         'console_scripts': [

@@ -5,7 +5,7 @@ import logging
 import jsonschema
 
 from .plugins import Plugin, BasePlugin
-from . import json_util
+from . import util
 
 
 def entry_point(args=None, configuration=None):
@@ -51,7 +51,7 @@ def entry_point(args=None, configuration=None):
     # Construct the schema
     schema = base.SCHEMA
     for cls in plugin_cls.values():
-        schema = json_util.merge(schema, cls.SCHEMA)
+        schema = util.merge(schema, cls.SCHEMA)
 
     # Ensure that the plugins are relevant to the command
     plugins = [plugin for plugin in plugins
@@ -62,7 +62,7 @@ def entry_point(args=None, configuration=None):
     args = parser.parse_args(remainder)
 
     # Apply defaults
-    json_util.set_default_from_schema(configuration, schema)
+    util.set_default_from_schema(configuration, schema)
 
     # Apply all the plugins in order
     logger.debug("configuration:\n%s", json.dumps(configuration, indent=4))

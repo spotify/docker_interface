@@ -1,7 +1,7 @@
 import argparse
 import sys
 from ..docker_interface import build_docker_run_command
-from .. import json_util
+from .. import util
 from .base import Plugin, ExecutePlugin
 
 
@@ -196,6 +196,6 @@ class RunConfigurationPlugin(Plugin):
     def apply(self, configuration, schema, args):
         super(RunConfigurationPlugin, self).apply(configuration, schema, args)
         # Set some sensible defaults (could also be published as variables)
-        json_util.set_default(configuration, '/run/tty', sys.stdout.isatty())
-        json_util.set_default(configuration, '/run/interactive', sys.stdout.isatty())
+        util.set_default(configuration, '/run/tty', sys.stdout.isatty())
+        util.set_default(configuration, '/run/interactive', sys.stdout.isatty())
         return configuration

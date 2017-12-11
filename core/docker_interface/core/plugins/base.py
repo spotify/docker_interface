@@ -9,7 +9,7 @@ import jsonschema
 import pkg_resources
 import yaml
 
-from .. import json_util
+from .. import util
 
 
 class Plugin:
@@ -33,16 +33,16 @@ class Plugin:
         name = name or ('--%s' % os.path.basename(path))
         self.arguments[name.strip('-')] = path
         # Build a path to the help in the schema
-        path = json_util.split_path(path)
+        path = util.split_path(path)
         path = os.path.sep.join(
             it.chain([os.path.sep], *zip(it.repeat("properties"), path)))
-        property_ = json_util.get_value(schema, path)
+        property_ = util.get_value(schema, path)
         defaults = {
             'choices': property_.get('enum'),
             'help': property_.get('description')
         }
         if 'type' in property_:
-            defaults['type'] = json_util.TYPES[property_['type']]
+            defaults['type'] = util.TYPES[property_['type']]
         defaults.update(kwargs)
         return parser.add_argument(name, **defaults)
 
@@ -60,7 +60,7 @@ class Plugin:
         for name, path in self.arguments.items():
             value = getattr(args, name.replace('-', '_'))
             if value is not None:
-                json_util.set_default(configuration, path, value)
+                util.set_default(configuration, path, value)
 
         return configuration
 
@@ -270,7 +270,7 @@ class SubstitutionPlugin(Plugin):
                 path = os.path.join(os.path.dirname(ref), match.group('path'))
                 try:
                     value = value.replace(
-                        match.group(0), str(json_util.get_value(configuration, path)))
+                        match.group(0), str(util.get_value(configuration, path)))
                 except KeyError:
                     raise KeyError(path)
 
@@ -280,12 +280,12 @@ class SubstitutionPlugin(Plugin):
                     break
                 value = value.replace(
                     match.group(0),
-                    str(json_util.get_value(self.VARIABLES, match.group('path'), '/')))
+                    str(util.get_value(self.VARIABLES, match.group('path'), '/')))
         return value
 
     def apply(self, configuration, schema, args):
         super(SubstitutionPlugin, self).apply(configuration, schema, args)
-        return json_util.apply(configuration, ft.partial(self._substitute_variables, configuration))
+        return util.apply(configuration, ft.partial(self._substitute_variables, configuration))
 
 
 class WorkspaceMountPlugin(Plugin):
@@ -318,7 +318,7 @@ class WorkspaceMountPlugin(Plugin):
         configuration['run'].setdefault('mount', []).append({
             'type': 'bind',
             'source': '#{/workspace}',
-            'destination': json_util.get_value(configuration, '/run/workspace-dir')
+            'destination': util.get_value(configuration, '/run/workspace-dir')
         })
         return configuration
 

@@ -4,7 +4,7 @@ import os
 
 from .base import Plugin, SubstitutionPlugin
 from .run import RunConfigurationPlugin
-from .. import json_util
+from .. import util
 
 
 class UserPlugin(Plugin):
@@ -24,7 +24,7 @@ class UserPlugin(Plugin):
         "properties": {
             "run": {
                 "properties": {
-                    "user": json_util.get_value(
+                    "user": util.get_value(
                         RunConfigurationPlugin.SCHEMA, '/properties/run/properties/user')
                 }
             }
@@ -88,5 +88,5 @@ class UserPlugin(Plugin):
             'gid': group.gr_gid,
             'name': group.gr_name,
         }
-        json_util.set_value(configuration, '/run/user', "${user/uid}:${group/gid}")
+        util.set_value(configuration, '/run/user', "${user/uid}:${group/gid}")
         return configuration
