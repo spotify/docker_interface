@@ -17,7 +17,12 @@ node {
 
     if (env.BRANCH_NAME == "master") {
         stage('Publish') {
-            sh "sp-pypi-upload"
+            dir("core") {
+                sh "sp-pypi-upload"
+            }
+            dir("google") {
+                sh "sp-pypi-upload"
+            }
         }
     }
 }
