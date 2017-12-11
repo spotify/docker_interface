@@ -14,4 +14,10 @@ node {
     stage('Build docs') {
         sh "docker run --rm \$(echo ${env.BUILD_TAG} | tr '[A-Z]' '[a-z]' | tr -cd '[a-z0-9\n]') make html"
     }
+
+    if (env.BRANCH_NAME == "master") {
+        stage('Publish') {
+            sh "sp-pypi-upload"
+        }
+    }
 }
