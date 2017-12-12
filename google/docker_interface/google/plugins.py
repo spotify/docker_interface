@@ -10,7 +10,7 @@ class GoogleCloudCredentialsPlugin(Plugin):
     COMMANDS = ['run']
 
     def apply(self, configuration, schema, args):
-        configuration['build'].setdefault('mount', []).append({
+        configuration['run'].setdefault('mount', []).append({
             'type': 'bind',
             'source': '${env/HOME}/.config/gcloud',
             'destination': '#{/run/env/HOME}/.config/gcloud'
