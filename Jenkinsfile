@@ -23,6 +23,9 @@ node {
             dir("google") {
                 sh "sp-pypi-upload"
             }
+            dir("python") {
+                sh "sp-pypi-upload"
+            }
         }
     }
 }
