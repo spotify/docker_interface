@@ -45,7 +45,7 @@ def build_docker_run_command(configuration):
 
     # Add the mounts
     for mount in run.pop('mount', []):
-        if 'source' in mount:
+        if mount['type'] == 'bind':
             mount['source'] = os.path.join(configuration['workspace'], mount['source'])
         parts.extend(['--mount', ",".join(["%s=%s" % item for item in mount.items()])])
 
@@ -83,6 +83,9 @@ def build_docker_build_command(configuration):
     parts.append('build')
 
     build = configuration.pop('build')
+
+    build['path'] = os.path.join(configuration['workspace'], build['path'])
+    build['file'] = os.path.join(build['path'], build['file'])
 
     parts.extend(build_parameter_parts(
         build, 'tag', 'file', 'no-cache', 'quiet', 'cpu-shares', 'memory'))

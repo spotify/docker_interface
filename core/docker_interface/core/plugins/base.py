@@ -88,6 +88,7 @@ class ValidationPlugin(Plugin):
     ORDER = 990
 
     def apply(self, configuration, schema, args):
+        super(ValidationPlugin, self).apply(configuration, schema, args)
         validator = jsonschema.validators.validator_for(schema)(schema)
         errors = list(validator.iter_errors(configuration))
         if errors: # pragma: no cover
@@ -217,11 +218,11 @@ class BasePlugin(Plugin):
         # Load the configuration
         if os.path.isfile(args.file):
             filename = os.path.abspath(args.file)
-            with open(filename) as fp:
+            with open(filename) as fp:  # pylint: disable=invalid-name
                 configuration = yaml.load(fp)
             self.logger.debug("loaded configuration from '%s'", filename)
-            configuration['workspace'] = configuration.get(
-                'workspace', os.path.dirname(filename))
+            configuration['workspace'] = os.path.abspath(configuration.get(
+                'workspace', os.path.dirname(filename)))
         elif args.file == 'di.yml':
             self.logger.warning(
                 "using empty configuration because no 'di.yml' file could be found")
@@ -315,6 +316,7 @@ class WorkspaceMountPlugin(Plugin):
         self.add_argument(parser, '/run/workspace-dir')
 
     def apply(self, configuration, schema, args):
+        super(WorkspaceMountPlugin, self).apply(configuration, schema, args)
         configuration['run'].setdefault('mount', []).append({
             'type': 'bind',
             'source': '#{/workspace}',
@@ -331,6 +333,7 @@ class HomeDirPlugin(Plugin):
     COMMANDS = ['run']
 
     def apply(self, configuration, schema, args):
+        super(HomeDirPlugin, self).apply(configuration, schema, args)
         configuration['run'].setdefault('tmpfs', []).append({
             'destination': '#{/run/env/HOME}',
             'options': ['exec']

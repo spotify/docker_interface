@@ -4,7 +4,7 @@ PLUGINS = ['GoogleCloudCredentials', 'GoogleDockerAuthorization']
 
 setup(
     name="docker_interface_google",
-    version="0.1",
+    version="0.2",
     packages=['docker_interface.google'],
     install_requires=[
         'jsonschema==2.6.0'

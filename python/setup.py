@@ -4,7 +4,7 @@ PLUGINS = ['JupyterNotebook']
 
 setup(
     name="docker_interface_python",
-    version="0.1",
+    version="0.2",
     packages=['docker_interface.python'],
     install_requires=[
         'jsonschema==2.6.0'
