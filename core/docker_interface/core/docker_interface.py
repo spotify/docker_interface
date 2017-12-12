@@ -58,6 +58,8 @@ def build_docker_run_command(configuration):
 
     # Forward ports
     for publish in run.pop('publish', []):
+        if publish['type'] == 'bind':
+            publish['source'] = os.path.join(configuration['workspace'], publish['source'])
         parts.append('--publish=%s:%s:%s' % tuple([
             publish.get(key, '') for key in "ip host container".split()]))
 
