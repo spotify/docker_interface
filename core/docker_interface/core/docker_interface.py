@@ -45,7 +45,7 @@ def build_docker_run_command(configuration):
 
     # Add the mounts
     for mount in run.pop('mount', []):
-        if 'source' in mount:
+        if mount['type'] == 'bind':
             mount['source'] = os.path.join(configuration['workspace'], mount['source'])
         parts.extend(['--mount', ",".join(["%s=%s" % item for item in mount.items()])])
 
@@ -58,8 +58,6 @@ def build_docker_run_command(configuration):
 
     # Forward ports
     for publish in run.pop('publish', []):
-        if publish['type'] == 'bind':
-            publish['source'] = os.path.join(configuration['workspace'], publish['source'])
         parts.append('--publish=%s:%s:%s' % tuple([
             publish.get(key, '') for key in "ip host container".split()]))
 
