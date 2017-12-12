@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 PLUGINS = [
     'Run', 'Build', 'WorkspaceMount', 'Substitution', 'User', 'HomeDir', 'RunConfiguration',
@@ -7,8 +7,8 @@ PLUGINS = [
 
 setup(
     name="docker_interface_core",
-    version="0.2.1",
-    packages=['docker_interface.core'],
+    version="0.2.2",
+    packages=['docker_interface.%s' % pkg for pkg in find_packages('docker_interface')],
     install_requires=[
         'jsonschema==2.6.0',
         'pyaml==17.10.0',
