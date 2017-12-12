@@ -7,7 +7,7 @@ PLUGINS = [
 
 setup(
     name="docker_interface_core",
-    version="0.2",
+    version="0.2.1",
     packages=['docker_interface.core'],
     install_requires=[
         'jsonschema==2.6.0',

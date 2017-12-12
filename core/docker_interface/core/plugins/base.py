@@ -221,8 +221,8 @@ class BasePlugin(Plugin):
             with open(filename) as fp:  # pylint: disable=invalid-name
                 configuration = yaml.load(fp)
             self.logger.debug("loaded configuration from '%s'", filename)
-            configuration['workspace'] = os.path.abspath(configuration.get(
-                'workspace', os.path.dirname(filename)))
+            dirname = os.path.dirname(filename)
+            configuration['workspace'] = os.path.join(dirname, configuration.get('workspace', '.'))
         elif args.file == 'di.yml':
             self.logger.warning(
                 "using empty configuration because no 'di.yml' file could be found")
