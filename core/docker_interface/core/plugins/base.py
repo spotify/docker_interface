@@ -303,11 +303,14 @@ class WorkspaceMountPlugin(Plugin):
                         "default": "/workspace"
                     },
                     "workdir": {
+                        "type": "string",
                         "default": "#{workspace-dir}"
                     }
-                }
+                },
+                "additionalProperties": False
             }
-        }
+        },
+        "additionalProperties": False
     }
     COMMANDS = ['run']
     ORDER = 500
