@@ -18,7 +18,7 @@ class GoogleCloudCredentialsPlugin(Plugin):
         return configuration
 
 
-class GoogleDockerAuthorizationPlugin(ExecutePlugin):
+class GoogleContainerRegistryPlugin(ExecutePlugin):
     """
     Configure docker authorization for Google services such as Google Container Registry.
     """
