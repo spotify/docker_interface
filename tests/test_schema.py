@@ -1,6 +1,6 @@
 import os
 import pytest
-from docker_interface.core import plugins
+from docker_interface import plugins
 
 
 @pytest.mark.parametrize('plugin, cls', plugins.Plugin.load_plugins().items())

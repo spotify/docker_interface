@@ -2,8 +2,8 @@ import os
 import socket
 import uuid
 
-from docker_interface.core.plugins import Plugin
-from docker_interface.core.util import get_free_port
+from .base import Plugin
+from ..util import get_free_port
 
 
 class JupyterNotebookPlugin(Plugin):

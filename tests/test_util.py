@@ -1,5 +1,5 @@
 import pytest
-from docker_interface.core import util
+from docker_interface import util
 
 
 def test_set_value():
