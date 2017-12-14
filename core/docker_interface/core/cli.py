@@ -73,5 +73,9 @@ def entry_point(args=None, configuration=None):
             assert configuration is not None, "plugin '%s' returned `None`" % plugin
         except Exception as ex:  # pragma: no cover
             logger.fatal("failed to apply plugin '%s': %s", plugin, ex)
-            raise
+            break
         logger.debug("configuration:\n%s", json.dumps(configuration, indent=4))
+
+    for plugin in reversed(plugins):
+        logger.debug("tearing down plugin '%s'", plugin)
+        plugin.cleanup()

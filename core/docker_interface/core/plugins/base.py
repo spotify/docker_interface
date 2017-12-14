@@ -79,6 +79,11 @@ class Plugin:
             plugin_cls[entry_point.name] = cls
         return plugin_cls
 
+    def cleanup(self):
+        """
+        Tear down the plugin and clean up any resources used.
+        """
+        pass
 
 class ValidationPlugin(Plugin):
     """
@@ -262,10 +267,15 @@ class SubstitutionPlugin(Plugin):
         'env': dict(os.environ)
     }
 
-    def _substitute_variables(self, configuration, value, ref):
+    @classmethod
+    def substitute_variables(cls, configuration, value, ref):
+        """
+        Substitute varibles in `value` from `configuration` where any path reference is relative to
+        `ref`.
+        """
         if isinstance(value, str):
             while True:
-                match = self.REF_PATTERN.search(value)
+                match = cls.REF_PATTERN.search(value)
                 if match is None:
                     break
                 path = os.path.join(os.path.dirname(ref), match.group('path'))
@@ -276,17 +286,17 @@ class SubstitutionPlugin(Plugin):
                     raise KeyError(path)
 
             while True:
-                match = self.VAR_PATTERN.search(value)
+                match = cls.VAR_PATTERN.search(value)
                 if match is None:
                     break
                 value = value.replace(
                     match.group(0),
-                    str(util.get_value(self.VARIABLES, match.group('path'), '/')))
+                    str(util.get_value(cls.VARIABLES, match.group('path'), '/')))
         return value
 
     def apply(self, configuration, schema, args):
         super(SubstitutionPlugin, self).apply(configuration, schema, args)
-        return util.apply(configuration, ft.partial(self._substitute_variables, configuration))
+        return util.apply(configuration, ft.partial(self.substitute_variables, configuration))
 
 
 class WorkspaceMountPlugin(Plugin):

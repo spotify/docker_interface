@@ -1,6 +1,9 @@
 import pwd
 import grp
 import os
+import subprocess
+import tempfile
+import uuid
 
 from .base import Plugin, SubstitutionPlugin
 from .run import RunConfigurationPlugin
@@ -32,6 +35,10 @@ class UserPlugin(Plugin):
         },
         "additionalProperties": False
     }
+
+    def __init__(self):
+        super(UserPlugin, self).__init__()
+        self.tempdir = None
 
     def add_arguments(self, parser):
         self.add_argument(parser, '/run/user')
@@ -91,4 +98,43 @@ class UserPlugin(Plugin):
             'name': group.gr_name,
         }
         util.set_value(configuration, '/run/user', "${user/uid}:${group/gid}")
+
+        # Create a temporary directory and copy the group and passwd files
+        self.tempdir = tempfile.TemporaryDirectory(dir='/tmp')
+        name = uuid.uuid4().hex
+        # Create a docker image
+        image = util.get_value(configuration, '/run/image')
+        image = SubstitutionPlugin.substitute_variables(configuration, image, '/run')
+        subprocess.check_call([configuration['docker'], 'create', '--name', name, image])
+        # Copy out the passwd and group files, mount them, and append the necessary information
+        for filename in ['passwd', 'group']:
+            path = os.path.join(self.tempdir.name, filename)
+            subprocess.check_call([
+                configuration['docker'], 'cp', '%s:/etc/%s' % (name, filename), path])
+            util.set_default(configuration, '/run/mount', []).append({
+                'type': 'bind',
+                'source': path,
+                'destination': '/etc/%s' % filename
+            })
+            with open(path, 'a') as fp:
+                variables = {
+                    'user': user.pw_name,
+                    'uid': user.pw_uid,
+                    'group': group.gr_name,
+                    'gid': group.gr_gid
+                }
+                if filename == 'passwd':
+                    line = "%(user)s:x:%(uid)d:%(gid)d:%(user)s:/%(user)s:/bin/sh\n" % variables
+                else:
+                    line = "%(group)s:x:%(gid)d:%(user)s\n" % variables
+                fp.write(line)
+            assert os.path.isfile(path)
+
+        # Destroy the container
+        subprocess.check_call(['docker', 'rm', name])
+
         return configuration
+
+    def cleanup(self):
+        if self.tempdir:
+            self.tempdir.cleanup()
