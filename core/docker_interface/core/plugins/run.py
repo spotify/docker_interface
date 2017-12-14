@@ -43,7 +43,7 @@ class RunConfigurationPlugin(Plugin):
                             ]
                         }
                     },
-                    "env_file": {
+                    "env-file": {
                         "type": "array",
                         "description": "Read in a file of environment variables.",
                         "items": {
@@ -80,7 +80,8 @@ class RunConfigurationPlugin(Plugin):
                             "required": [
                                 "type",
                                 "destination"
-                            ]
+                            ],
+                            "additionalProperties": False
                         }
                     },
                     "publish": {
@@ -104,7 +105,8 @@ class RunConfigurationPlugin(Plugin):
                             },
                             "required": [
                                 "container"
-                            ]
+                            ],
+                            "additionalProperties": False
                         }
                     },
                     "tmpfs": {
@@ -127,7 +129,8 @@ class RunConfigurationPlugin(Plugin):
                             },
                             "required": [
                                 "destination"
-                            ]
+                            ],
+                            "additionalProperties": False
                         }
                     },
                     "cmd": {
@@ -184,9 +187,11 @@ class RunConfigurationPlugin(Plugin):
                         "type": "string",
                         "description": "Username or UID (format: <name|uid>[:<group|gid>])"
                     }
-                }
+                },
+                "additionalProperties": False
             }
-        }
+        },
+        "additionalProperties": False
     }
 
     def add_arguments(self, parser):

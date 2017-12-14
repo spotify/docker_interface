@@ -38,7 +38,10 @@ class BuildConfigurationPlugin(Plugin):
                     },
                     "build-arg": {
                         "type": "object",
-                        "description": "Set build-time variables."
+                        "description": "Set build-time variables.",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
                     },
                     "no-cache": {
                         "type": "boolean",
@@ -63,7 +66,9 @@ class BuildConfigurationPlugin(Plugin):
                     "tag",
                     "path",
                     "file"
-                ]
-            }
-        }
+                ],
+                "additionalProperties": False
+            },
+        },
+        "additionalProperties": False
     }

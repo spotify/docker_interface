@@ -26,9 +26,11 @@ class UserPlugin(Plugin):
                 "properties": {
                     "user": util.get_value(
                         RunConfigurationPlugin.SCHEMA, '/properties/run/properties/user')
-                }
+                },
+                "additionalProperties": False
             }
-        }
+        },
+        "additionalProperties": False
     }
 
     def add_arguments(self, parser):
