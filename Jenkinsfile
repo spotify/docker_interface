@@ -23,15 +23,8 @@ node {
 
     if (env.BRANCH_NAME == "master") {
         stage('Publish') {
-            dir("core") {
-                sh "sp-pypi-upload"
-            }
-            dir("google") {
-                sh "sp-pypi-upload"
-            }
-            dir("python") {
-                sh "sp-pypi-upload"
-            }
+            sh "sp-pypi-upload"
+            sh "docker run --rm python:3 pip install docker-interface -i https://artifactory.spotify.net/artifactory/api/pypi/pypi/simple/"
         }
     }
 }

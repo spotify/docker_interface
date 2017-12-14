@@ -6,13 +6,13 @@
 Docker Interface
 ================
 
-Docker Interface (DI) is a declarative interface for building images and running commands in containers using Docker. First, DI is a basic framework that can be extended through plugins. Second, DI is a suite of plugins that enables users to leverage Docker as a development environment.
+Docker Interface (DI) is a declarative interface for building images and running commands in containers using Docker.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   introduction
+   guide
    plugins
    plugin_reference
 

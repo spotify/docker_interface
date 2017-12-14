@@ -1,6 +1,6 @@
 import glob
 import json
-from docker_interface.core import cli
+from docker_interface import cli
 import pytest
 
 

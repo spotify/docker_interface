@@ -26,15 +26,15 @@ def entry_point(args=None, configuration=None):
     plugin_cls = Plugin.load_plugins()
     plugins = configuration.get('plugins')
     if isinstance(plugins, list):
-        plugins = [plugin_cls[name] for name in plugins]
+        plugins = [plugin_cls[name.lower()] for name in plugins]
     else:
         # Disable and enable specific plugins
         if isinstance(plugins, dict):
             try:
                 for name in plugins.get('enable', []):
-                    plugin_cls[name].ENABLED = True
+                    plugin_cls[name.lower()].ENABLED = True
                 for name in plugins.get('disable', []):
-                    plugin_cls[name].ENABLED = False
+                    plugin_cls[name.lower()].ENABLED = False
             except KeyError as ex:
                 logger.fatal("could not resolve plugin %s. Available plugins: %s",
                              ex, ", ".join(plugin_cls))
@@ -73,6 +73,10 @@ def entry_point(args=None, configuration=None):
             assert configuration is not None, "plugin '%s' returned `None`" % plugin
         except Exception as ex:  # pragma: no cover
             logger.fatal("failed to apply plugin '%s': %s", plugin, ex)
+            message = "please rerun the command using `di --log-level debug` and file a new " \
+                      "issue containing the output of the command here: https://ghe.spotify.net/" \
+                      "sonalytic/docker_interface/issues/new"
+            logger.fatal("\033[%dm%s\033[0m", 31, message)
             break
         logger.debug("configuration:\n%s", json.dumps(configuration, indent=4))
 

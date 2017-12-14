@@ -1,5 +1,5 @@
 import os
-from docker_interface.core.plugins import Plugin, ExecutePlugin
+from .base import Plugin, ExecutePlugin
 
 
 class GoogleCloudCredentialsPlugin(Plugin):

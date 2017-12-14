@@ -8,4 +8,4 @@ WORKDIR /workspace
 COPY requirements.txt .
 RUN pip install -r requirements.txt --no-cache-dir
 COPY . .
-RUN pip install -e core -e google -e python
+RUN pip install -e .

@@ -1,6 +1,6 @@
 import os
 import textwrap
-from docker_interface.core import plugins
+from docker_interface import plugins
 
 
 def build_property_tree(schema, depth=0):
@@ -9,7 +9,11 @@ def build_property_tree(schema, depth=0):
         type_ = property_.get('type')
         if type_:
             parts.append(' (:code:`%s`)' % type_)
-        parts.append(': %s' % property_.get('description', ''))
+        parts.append(': %s' % property_.get('description', '').strip('.'))
+        default = property_.get('default')
+        if default:
+            parts.append(' (default: :code:`%s`)' % default)
+        parts.append('.')
         yield ''.join(parts)
         if 'properties' in property_:
             for line in build_property_tree(property_, depth + 4):
@@ -27,7 +31,6 @@ This document lists all plugins in order of execution.
 classes = plugins.Plugin.load_plugins()
 classes['base'] = plugins.base.BasePlugin
 for name, plugin_cls in sorted(classes.items(), key=lambda x: x[1].ORDER or 0):
-    # title = ":code:`%s`" % plugin_cls.__name__
     title = plugin_cls.__name__
     lines.extend([title, '-' * len(title), ''])
     lines.extend([textwrap.dedent(plugin_cls.__doc__), ''])

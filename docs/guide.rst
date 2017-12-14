@@ -7,19 +7,36 @@ Introduction
 * `ports need to be manually forwarded to run Jupyter notebook servers <https://hub.docker.com/r/jupyter/base-notebook/>`_,
 * or `credentials are not available inside the container <https://stackoverflow.com/questions/42307210/user-google-cloud-credentials-inside-ephemeral-container>`_.
 
-These issues can be addressed directly by modifying the arguments passed to the Docker `command line interface <https://docs.docker.com/engine/reference/commandline/cli/>`_ (CLI), but the resulting commands can be formidable.
+These issues can be addressed directly by modifying the arguments passed to the Docker `command line interface <https://docs.docker.com/engine/reference/commandline/cli/>`_ (CLI), but the resulting commands can be formidable. Docker Interface allows users to define a Docker command declaratively in a configuration file rather than having to remember to type out all required arguments on the command line. In short, Docker Interface is a translator from a command declaration to a Docker command.
 
-A solution
-----------
+Installing Docker interface
+---------------------------
 
-Docker Interface allows users to define a Docker command declaratively in a configuration file rather than having to remember to type out all required arguments on the command line. In short, Docker Interface is a translator from a command declaration to a Docker command. A basic configuration (as a YAML or JSON file) might look like so.
+You can install Docker Interface from Artifactory using the following command (you need a python3 interpreter).
+
+.. code-block:: bash
+
+   pip install docker-interface -i https://artifactory.spotify.net/artifactory/api/pypi/pypi/simple/
+
+
+To check that Docker Interface was installed successfully, run
+
+.. code-block:: bash
+
+   di --help
+
+
+Using Docker Interface
+----------------------
+
+Docker Interface will attempt to locate a configuration file :code:`di.yml` in the current working directory. A basic configuration (as a YAML or JSON file) might look like so.
 
 .. code-block:: yaml
 
    docker: docker  # The docker command to use, e.g. nvidia-docker
    workspace: .    # The workspace path (relative to the directory containing the configuration)
 
-All paths in the configuration are relative to the :code:`workspace`. By default, Docker Interface will attempt to load the configuration from a JSON or YAML file :code:`di.yml` in the current directory. The values shown above are default values and you can omit them unless you want to change them.
+All paths in the configuration are relative to the :code:`workspace`. The values shown above are default values and you can omit them unless you want to change them.
 
 Docker Interface supports two commands:
 
@@ -50,3 +67,5 @@ and modify your :code:`di.yml` configuration to read:
      tag: my-ipython
 
 Running :code:`di build` from the command line will build your image, and :code:`di run ipython` will run the :code:`ipython` command inside the container. Unless otherwise specified, Docker Interface uses the image built in the :code:`build` step to start a new container when you use the :code:`run` command.
+
+A comprehensive list of variables that can be set in the :code:`di.yml` configuration can be found in the :doc:`plugin_reference`.

@@ -8,12 +8,12 @@ BUILDDIR      = docs/_build
 tests : code_tests
 
 code_tests :
-	py.test --cov docker_interface.core --cov docker_interface.google --cov-report=html --cov-report=term-missing
+	py.test --cov docker_interface --cov-report=html --cov-report=term-missing
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-docs/plugin_reference.rst : docs/generate_plugin_reference.py
+docs/plugin_reference.rst : docs/generate_reference.py
 	python $<
 
 # Catch-all target: route all unknown targets to Sphinx using the new
