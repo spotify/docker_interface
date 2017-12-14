@@ -12,7 +12,7 @@ Docker Interface (DI) is a declarative interface for building images and running
    :maxdepth: 2
    :caption: Contents:
 
-   introduction
+   guide
    plugins
    plugin_reference
 

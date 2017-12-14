@@ -7,12 +7,29 @@ Introduction
 * `ports need to be manually forwarded to run Jupyter notebook servers <https://hub.docker.com/r/jupyter/base-notebook/>`_,
 * or `credentials are not available inside the container <https://stackoverflow.com/questions/42307210/user-google-cloud-credentials-inside-ephemeral-container>`_.
 
-These issues can be addressed directly by modifying the arguments passed to the Docker `command line interface <https://docs.docker.com/engine/reference/commandline/cli/>`_ (CLI), but the resulting commands can be formidable.
+These issues can be addressed directly by modifying the arguments passed to the Docker `command line interface <https://docs.docker.com/engine/reference/commandline/cli/>`_ (CLI), but the resulting commands can be formidable. Docker Interface allows users to define a Docker command declaratively in a configuration file rather than having to remember to type out all required arguments on the command line. In short, Docker Interface is a translator from a command declaration to a Docker command.
 
-A solution
-----------
+Installing Docker interface
+---------------------------
 
-Docker Interface allows users to define a Docker command declaratively in a configuration file rather than having to remember to type out all required arguments on the command line. In short, Docker Interface is a translator from a command declaration to a Docker command. A basic configuration (as a YAML or JSON file) might look like so.
+You can install Docker Interface from Artifactory using the following command (you need a python3 interpreter).
+
+.. code-block:: bash
+
+   pip install docker-interface -i https://artifactory.spotify.net/artifactory/api/pypi/pypi/simple/
+
+
+To check that Docker Interface was installed successfully, run
+
+.. code-block:: bash
+
+   di --help
+
+
+Using Docker Interface
+----------------------
+
+Docker Interface will attempt to locate a configuration file :code:`di.yml` in the current working directory. A basic configuration (as a YAML or JSON file) might look like so.
 
 .. code-block:: yaml
 

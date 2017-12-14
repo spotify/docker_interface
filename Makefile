@@ -13,7 +13,7 @@ code_tests :
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-docs/plugin_reference.rst : docs/generate_plugin_reference.py
+docs/plugin_reference.rst : docs/generate_reference.py
 	python $<
 
 # Catch-all target: route all unknown targets to Sphinx using the new
