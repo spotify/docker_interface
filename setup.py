@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 PLUGINS = [
     'Run', 'Build', 'WorkspaceMount', 'Substitution', 'User', 'HomeDir', 'RunConfiguration',
-    'BuildConfiguration', 'Validation', 'GoogleCloudCredentials', 'GoogleDockerAuthorization',
+    'BuildConfiguration', 'Validation', 'GoogleCloudCredentials', 'GoogleContainerRegistry',
     'JupyterNotebook'
 ]
 
 setup(
     name="docker_interface",
-    version="0.2.3",
+    version="0.2.4",
     packages=find_packages(),
     install_requires=[
         'jsonschema==2.6.0',
