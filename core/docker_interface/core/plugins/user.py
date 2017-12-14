@@ -105,7 +105,10 @@ class UserPlugin(Plugin):
         # Create a docker image
         image = util.get_value(configuration, '/run/image')
         image = SubstitutionPlugin.substitute_variables(configuration, image, '/run')
-        subprocess.check_call([configuration['docker'], 'create', '--name', name, image])
+        status = subprocess.call([configuration['docker'], 'create', '--name', name, image, 'sh'])
+        if status:
+            raise RuntimeError(
+                "Could not create container from image '%s'. Did you run `di build`?" % image)
         # Copy out the passwd and group files, mount them, and append the necessary information
         for filename in ['passwd', 'group']:
             path = os.path.join(self.tempdir.name, filename)
