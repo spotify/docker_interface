@@ -8,7 +8,8 @@ from ..util import get_free_port
 
 class JupyterNotebookPlugin(Plugin):
     """
-    Mount Google Cloud credentials in the Docker container.
+    Forward the port required by Jupyter Notebook to the host machine and print a URL for easily
+    accessing the notebook server.
     """
     ORDER = 960
     COMMANDS = ['run']

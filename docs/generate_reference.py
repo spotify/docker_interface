@@ -9,7 +9,11 @@ def build_property_tree(schema, depth=0):
         type_ = property_.get('type')
         if type_:
             parts.append(' (:code:`%s`)' % type_)
-        parts.append(': %s' % property_.get('description', ''))
+        parts.append(': %s' % property_.get('description', '').strip('.'))
+        default = property_.get('default')
+        if default:
+            parts.append(' (default: :code:`%s`)' % default)
+        parts.append('.')
         yield ''.join(parts)
         if 'properties' in property_:
             for line in build_property_tree(property_, depth + 4):

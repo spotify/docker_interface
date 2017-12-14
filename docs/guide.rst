@@ -36,7 +36,7 @@ Docker Interface will attempt to locate a configuration file :code:`di.yml` in t
    docker: docker  # The docker command to use, e.g. nvidia-docker
    workspace: .    # The workspace path (relative to the directory containing the configuration)
 
-All paths in the configuration are relative to the :code:`workspace`. By default, Docker Interface will attempt to load the configuration from a JSON or YAML file :code:`di.yml` in the current directory. The values shown above are default values and you can omit them unless you want to change them.
+All paths in the configuration are relative to the :code:`workspace`. The values shown above are default values and you can omit them unless you want to change them.
 
 Docker Interface supports two commands:
 
@@ -67,3 +67,5 @@ and modify your :code:`di.yml` configuration to read:
      tag: my-ipython
 
 Running :code:`di build` from the command line will build your image, and :code:`di run ipython` will run the :code:`ipython` command inside the container. Unless otherwise specified, Docker Interface uses the image built in the :code:`build` step to start a new container when you use the :code:`run` command.
+
+A comprehensive list of variables that can be set in the :code:`di.yml` configuration can be found in the :doc:`plugin_reference`.
