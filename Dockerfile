@@ -1,6 +1,11 @@
 FROM python:3
 
+RUN apt-get update \
+    && apt-get install zip -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /workspace
-RUN pip install sphinx sphinx-rtd-theme pytest pytest-cov
+COPY requirements.txt .
+RUN pip install -r requirements.txt --no-cache-dir
 COPY . .
 RUN pip install -e core -e google -e python

@@ -1,0 +1,6 @@
+sphinx
+sphinx-rtd-theme
+pytest
+pytest-cov
+jsonschema==2.6.0
+pyaml==17.10.0

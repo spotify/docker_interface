@@ -106,3 +106,6 @@ venv.bak/
 playground/
 .vscode/
 .DS_Store
+
+docs/plugin_reference.rst
+/di.yml
