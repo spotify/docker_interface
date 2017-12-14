@@ -73,9 +73,10 @@ def entry_point(args=None, configuration=None):
             assert configuration is not None, "plugin '%s' returned `None`" % plugin
         except Exception as ex:  # pragma: no cover
             logger.fatal("failed to apply plugin '%s': %s", plugin, ex)
-            logger.fatal("please rerun the command using `di --log-level debug` and file a new "
-                         "issue containing the output of the command here: https://ghe.spotify.net/"
-                         "sonalytic/docker_interface/issues/new")
+            message = "please rerun the command using `di --log-level debug` and file a new " \
+                      "issue containing the output of the command here: https://ghe.spotify.net/" \
+                      "sonalytic/docker_interface/issues/new"
+            logger.fatal("\033[%dm%s\033[0m", 31, message)
             break
         logger.debug("configuration:\n%s", json.dumps(configuration, indent=4))
 
