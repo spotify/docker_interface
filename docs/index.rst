@@ -15,6 +15,7 @@ Docker Interface (DI) is a declarative interface for building images and running
    guide
    plugins
    plugin_reference
+   schema
 
 
 Indices and tables

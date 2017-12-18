@@ -1,6 +1,7 @@
 import os
+import json
 import textwrap
-from docker_interface import plugins
+from docker_interface import plugins, util
 
 
 def build_property_tree(schema, depth=0):
@@ -30,6 +31,7 @@ This document lists all plugins in order of execution.
 
 classes = plugins.Plugin.load_plugins()
 classes['base'] = plugins.base.BasePlugin
+schema = {}
 for name, plugin_cls in sorted(classes.items(), key=lambda x: x[1].ORDER or 0):
     title = plugin_cls.__name__
     lines.extend([title, '-' * len(title), ''])
@@ -40,7 +42,11 @@ for name, plugin_cls in sorted(classes.items(), key=lambda x: x[1].ORDER or 0):
         lines.extend(['Properties', '~~~~~~~~~~', ''])
         lines.extend(tree)
     lines.append('')
+    schema = util.merge(schema, plugin_cls.SCHEMA)
 
 dirname = os.path.dirname(os.path.abspath(__file__))
 with open(os.path.join(dirname, 'plugin_reference.rst'), 'w') as fp:
     fp.write("\n".join(lines))
+
+with open(os.path.join(dirname, 'schema.json'), 'w') as fp:
+    json.dump(schema, fp, indent=4)

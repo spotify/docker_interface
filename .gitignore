@@ -108,4 +108,5 @@ playground/
 .DS_Store
 
 docs/plugin_reference.rst
+docs/schema.json
 /di.yml
