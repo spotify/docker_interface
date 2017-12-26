@@ -6,7 +6,7 @@ from .base import Plugin
 from ..util import get_free_port
 
 
-class JupyterNotebookPlugin(Plugin):
+class JupyterPlugin(Plugin):
     """
     Forward the port required by Jupyter Notebook to the host machine and print a URL for easily
     accessing the notebook server.
@@ -17,7 +17,7 @@ class JupyterNotebookPlugin(Plugin):
     def apply(self, configuration, schema, args):
         cmd = configuration.setdefault('run', {}).get('cmd', [])
         # Check whether the user is starting a notebook
-        if cmd and cmd[:2] == ['jupyter', 'notebook']:
+        if cmd and cmd[0] == 'jupyter' and cmd[1] in ('notebook', 'lab'):
             # Don't try to start a browser
             cmd.append('--no-browser')
             # Open the standard port for the notebook
