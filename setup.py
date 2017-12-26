@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 PLUGINS = [
     'Run', 'Build', 'WorkspaceMount', 'Substitution', 'User', 'HomeDir', 'RunConfiguration',
     'BuildConfiguration', 'Validation', 'GoogleCloudCredentials', 'GoogleContainerRegistry',
-    'JupyterNotebook'
+    'Jupyter'
 ]
 
 setup(
