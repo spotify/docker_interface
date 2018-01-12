@@ -50,11 +50,10 @@ def build_docker_run_command(configuration):
             mount['source'] = os.path.join(configuration['workspace'], mount['source'])
         parts.extend(['--mount', ",".join(["%s=%s" % item for item in mount.items()])])'''
 
-    # Add the mounts (support for legacy versions of docker)
+    # Add the mounts
     for mount in run.pop('mount', []):
        if mount['type'] == 'bind':
-           # -v does not accept relative paths
-           mount['source'] = os.path.abspath(os.path.join(configuration['workspace'], mount['source']))
+           mount['source'] = os.path.join(configuration['workspace'], mount['source'])
        parts.append('--volume=%s:%s' % (mount['source'], mount['destination']))
 
     # Set or forward environment variables
