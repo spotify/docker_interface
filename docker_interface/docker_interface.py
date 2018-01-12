@@ -52,9 +52,16 @@ def build_docker_run_command(configuration):
 
     # Add the mounts
     for mount in run.pop('mount', []):
+       if mount['type'] == 'tmpfs':
+           raise RuntimeError('tmpfs-mounts are currently not supported via the mount ' + 
+                              'directive in docker_interface. Consider using the tmpfs ' +
+                              'directive instead.' )
        if mount['type'] == 'bind':
            mount['source'] = os.path.join(configuration['workspace'], mount['source'])
-       parts.append('--volume=%s:%s' % (mount['source'], mount['destination']))
+       vol_config = '--volume=%s:%s' % (mount['source'], mount['destination'])
+       if 'readonly' in mount and mount['readonly']:
+           vol_config += ':ro'
+       parts.append(vol_config)
 
     # Set or forward environment variables
     for key, value in run.pop('env', {}).items():
