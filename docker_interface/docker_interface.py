@@ -44,10 +44,18 @@ def build_docker_run_command(configuration):
     ))
 
     # Add the mounts
-    for mount in run.pop('mount', []):
+    # The following code requires docker >= 17.06
+    '''for mount in run.pop('mount', []):
         if mount['type'] == 'bind':
             mount['source'] = os.path.join(configuration['workspace'], mount['source'])
-        parts.extend(['--mount', ",".join(["%s=%s" % item for item in mount.items()])])
+        parts.extend(['--mount', ",".join(["%s=%s" % item for item in mount.items()])])'''
+
+    # Add the mounts (support for legacy versions of docker)
+    for mount in run.pop('mount', []):
+       if mount['type'] == 'bind':
+           # -v does not accept relative paths
+           mount['source'] = os.path.abspath(os.path.join(configuration['workspace'], mount['source']))
+       parts.append('--volume=%s:%s' % (mount['source'], mount['destination']))
 
     # Set or forward environment variables
     for key, value in run.pop('env', {}).items():
