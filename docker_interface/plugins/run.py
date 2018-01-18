@@ -86,7 +86,7 @@ class RunConfigurationPlugin(Plugin):
                     },
                     "publish": {
                         "type": "array",
-                        "description": "Publish a container's port(s) to the host.",
+                        "description": "Publish a container's port(s), or range(s) of ports, to the host.",
                         "items": {
                             "type": "object",
                             "properties": {
@@ -95,12 +95,12 @@ class RunConfigurationPlugin(Plugin):
                                     "description": ""
                                 },
                                 "host": {
-                                    "type": "number",
-                                    "description": "Port on the host."
+                                    "type": "string",
+                                    "description": "Port (e.g. `8000`) or range of ports (e.g. `8000-8100`) on the host."
                                 },
                                 "container": {
-                                    "type": "number",
-                                    "description": "Port on the container."
+                                    "type": "string",
+                                    "description": "Port (e.g. `8000`) or range of ports (e.g. `8000-8100`) on the container."
                                 }
                             },
                             "required": [
