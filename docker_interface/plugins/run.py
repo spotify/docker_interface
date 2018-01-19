@@ -95,13 +95,27 @@ class RunConfigurationPlugin(Plugin):
                                     "description": ""
                                 },
                                 "host": {
-                                    "type": "string",
-                                    "pattern": "\\d+(-\\d+)?"
+                                    "anyOf": [
+                                        {
+                                            "type": "number"
+                                        },
+                                        {
+                                            "type": "string",
+                                            "pattern": "\\d+-\\d+"
+                                        }
+                                    ],
                                     "description": "Port (e.g. `8000`) or range of ports (e.g. `8000-8100`) on the host."
                                 },
                                 "container": {
-                                    "type": "string",
-                                    "pattern": "\\d+(-\\d+)?"
+                                    "anyOf": [
+                                        {
+                                            "type": "number"
+                                        },
+                                        {
+                                            "type": "string",
+                                            "pattern": "\\d+-\\d+"
+                                        }
+                                    ],
                                     "description": "Port (e.g. `8000`) or range of ports (e.g. `8000-8100`) on the container."
                                 }
                             },
