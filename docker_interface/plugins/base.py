@@ -228,9 +228,9 @@ class BasePlugin(Plugin):
             self.logger.debug("loaded configuration from '%s'", filename)
             dirname = os.path.dirname(filename)
             configuration['workspace'] = os.path.join(dirname, configuration.get('workspace', '.'))
-        else:
+        elif not configuration:
             raise FileNotFoundError(
-                "could not find configuration file '%s'" % args.file)
+                "missing configuration; could not find configuration file '%s'" % args.file)
 
         configuration = super(BasePlugin, self).apply(configuration, schema, args)
 
