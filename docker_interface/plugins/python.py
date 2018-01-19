@@ -23,8 +23,8 @@ class JupyterPlugin(Plugin):
             # Open the standard port for the notebook
             free_port = get_free_port()
             configuration['run'].setdefault('publish', []).append({
-                'container': 8888,
-                'host': free_port,
+                'container': '8888',
+                'host': str(free_port),
             })
 
             if not any([x.startswith('--NotebookApp.token=') for x in cmd]):
