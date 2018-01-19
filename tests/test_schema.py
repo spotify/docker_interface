@@ -7,10 +7,11 @@ from docker_interface import plugins
 def test_properties(plugin, cls):
     if not cls.SCHEMA:
         pytest.skip()
+    required = ["additionalProperties", "anyOf", "oneOf", "allOf", "not"]
     queue = [('/', cls.SCHEMA)]
     while queue:
         path, property_ = queue.pop()
-        assert "additionalProperties" in property_, \
+        assert any([r in property_ for r in required]), \
             "additionalProperties missing for plugin %s: %s" % (plugin, path)
 
         for name, child in property_.get('properties', {}).items():
