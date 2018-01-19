@@ -21,6 +21,6 @@ def test_properties(plugin, cls):
             if child and child["type"] == "object":
                 queue.append((os.path.join(path, name, "items"), child))
 
-        child = property_['additionalProperties']
+        child = property_.get('additionalProperties')
         if child and child["type"] == "object":
             queue.append((os.path.join(path, "additionalProperties"), child))

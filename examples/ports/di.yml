@@ -1,0 +1,9 @@
+build:
+  tag: ports-example
+run:
+  publish:
+    - container: 80
+      host: 8080
+    - container: 10000-10010
+      host: 10000-10010
+
