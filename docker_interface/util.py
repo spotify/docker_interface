@@ -117,11 +117,29 @@ def apply(instance, func, path=None):
     return func(instance, path)
 
 
-def get_free_port():
+def get_free_port(ports=None):
     """
-    Get a free port
+    Get a free port.
+
+    Parameters
+    ----------
+    ports : iterable
+        ports to check
     """
-    with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as _socket:
-        _socket.bind(('', 0))
-        address, port = _socket.getsockname()
-        return port
+    if ports is None:
+        with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as _socket:
+            _socket.bind(('', 0))
+            _, port = _socket.getsockname()
+            return port
+
+    # Get ports from the specified list
+    for port in ports:
+        with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as _socket:
+            try:
+                _socket.bind(('', port))
+                return port
+            except socket.error as ex:
+                if ex.errno != 48:
+                    raise
+
+    raise RuntimeError("could not find a free port")
