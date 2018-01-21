@@ -21,7 +21,7 @@ class JupyterPlugin(Plugin):
             # Don't try to start a browser
             cmd.append('--no-browser')
             # Open the standard port for the notebook
-            free_port = get_free_port()
+            free_port = get_free_port(range(8888, 9999))
             configuration['run'].setdefault('publish', []).append({
                 'container': 8888,
                 'host': free_port,
