@@ -18,10 +18,10 @@ docs/plugin_reference.rst : docs/generate_reference.py
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-html : Makefile docs/plugin_reference.rst
+docs : Makefile docs/plugin_reference.rst
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 clean :
 	rm -rf docs/_build
 
-.PHONY: help Makefile docs/plugin_reference.rst clean tests code_tests
+.PHONY: help Makefile docs/plugin_reference.rst clean tests code_tests docs
