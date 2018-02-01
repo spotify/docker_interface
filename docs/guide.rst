@@ -12,7 +12,7 @@ These issues can be addressed directly by modifying the arguments passed to the 
 Installing Docker interface
 ---------------------------
 
-You can install Docker Interface from Artifactory using the following command (you need a python3 interpreter).
+You can install Docker Interface using the following :code:`pip` command (you need a python3 interpreter).
 
 .. code-block:: bash
 
