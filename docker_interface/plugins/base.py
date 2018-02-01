@@ -130,19 +130,10 @@ class ExecutePlugin(Plugin):
         """
         raise NotImplementedError
 
-    def add_arguments(self, parser):
-        try:
-            parser.add_argument('--dry-run', '-n', help="don't run any commands; just print them",
-                                action='store_true')
-        except argparse.ArgumentError as ex:
-            if 'conflict' not in str(ex):
-                raise
-
     def apply(self, configuration, schema, args):
         super(ExecutePlugin, self).apply(configuration, schema, args)
         parts = self.build_command(configuration)
-        self.execute_command(parts, args.dry_run)
-        return configuration
+        return self.execute_command(parts, configuration['dry-run'])
 
     def execute_command(self, parts, dry_run):
         """
@@ -158,10 +149,11 @@ class ExecutePlugin(Plugin):
         Returns
         -------
         status : int
-            Status code of the executed command or `None` if `dry_run` is `True`.
+            Status code of the executed command or 0 if `dry_run` is `True`.
         """
         if dry_run:
             self.logger.info("dry-run command '%s'", " ".join(map(str, parts)))
+            return 0
         else:  # pragma: no cover
             self.logger.debug("executing command '%s'", " ".join(map(str, parts)))
             return os.spawnvpe(os.P_WAIT, parts[0], parts, os.environ)
@@ -190,6 +182,11 @@ class BasePlugin(Plugin):
                 "type": "string",
                 "enum": ["debug", "info", "warning", "error", "critical", "fatal"],
                 "default": "info"
+            },
+            "dry-run": {
+                "type": "boolean",
+                "description": "Whether to just construct the docker command.",
+                "default": False
             },
             "plugins": {
                 "oneOf": [
@@ -230,19 +227,20 @@ class BasePlugin(Plugin):
         self.add_argument(parser, '/workspace')
         self.add_argument(parser, '/docker')
         self.add_argument(parser, '/log-level')
+        self.add_argument(parser, '/dry-run')
         parser.add_argument('command', help='Docker interface command to execute.',
                             choices=['run', 'build'])
 
     def apply(self, configuration, schema, args):
         # Load the configuration
-        if os.path.isfile(args.file):
+        if configuration is None and os.path.isfile(args.file):
             filename = os.path.abspath(args.file)
             with open(filename) as fp:  # pylint: disable=invalid-name
                 configuration = yaml.load(fp)
             self.logger.debug("loaded configuration from '%s'", filename)
             dirname = os.path.dirname(filename)
             configuration['workspace'] = os.path.join(dirname, configuration.get('workspace', '.'))
-        elif not configuration:
+        elif configuration is None:
             raise FileNotFoundError(
                 "missing configuration; could not find configuration file '%s'" % args.file)
 

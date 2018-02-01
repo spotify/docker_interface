@@ -69,3 +69,11 @@ def test_set_default_from_schema():
 
 def test_apply():
     assert util.apply({'a': 3, 'b': [4, 5]}, lambda x, _: x ** 2) == {'a': 9, 'b': [16, 25]}
+
+
+def test_get_free_port_random():
+    assert util.get_free_port() > 0
+
+
+def test_get_free_port_bounded():
+    assert 8888 <= util.get_free_port((8888, 9999)) <= 9999

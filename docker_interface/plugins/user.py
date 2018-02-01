@@ -114,41 +114,44 @@ class UserPlugin(Plugin):
         util.set_value(configuration, '/run/user', "${user/uid}:${group/gid}")
 
         # Create a temporary directory and copy the group and passwd files
-        self.tempdir = tempfile.TemporaryDirectory(dir='/tmp')
-        name = uuid.uuid4().hex
-        # Create a docker image
-        image = util.get_value(configuration, '/run/image')
-        image = SubstitutionPlugin.substitute_variables(configuration, image, '/run')
-        status = subprocess.call([configuration['docker'], 'create', '--name', name, image, 'sh'])
-        if status:
-            raise RuntimeError(
-                "Could not create container from image '%s'. Did you run `di build`?" % image)
-        # Copy out the passwd and group files, mount them, and append the necessary information
-        for filename in ['passwd', 'group']:
-            path = os.path.join(self.tempdir.name, filename)
-            subprocess.check_call([
-                configuration['docker'], 'cp', '%s:/etc/%s' % (name, filename), path])
-            util.set_default(configuration, '/run/mount', []).append({
-                'type': 'bind',
-                'source': path,
-                'destination': '/etc/%s' % filename
-            })
-            with open(path, 'a') as fp:
-                variables = {
-                    'user': user.pw_name,
-                    'uid': user.pw_uid,
-                    'group': group.gr_name,
-                    'gid': group.gr_gid
-                }
-                if filename == 'passwd':
-                    line = "%(user)s:x:%(uid)d:%(gid)d:%(user)s:/%(user)s:/bin/sh\n" % variables
-                else:
-                    line = "%(group)s:x:%(gid)d:%(user)s\n" % variables
-                fp.write(line)
-            assert os.path.isfile(path)
+        if configuration['dry-run']:
+            self.logger.warning("cannot mount /etc/passwd and /etc/groups during dry-run")
+        else:
+            self.tempdir = tempfile.TemporaryDirectory(dir='/tmp')
+            name = uuid.uuid4().hex
+            # Create a docker image
+            image = util.get_value(configuration, '/run/image')
+            image = SubstitutionPlugin.substitute_variables(configuration, image, '/run')
+            status = subprocess.call([configuration['docker'], 'create', '--name', name, image, 'sh'])
+            if status:
+                raise RuntimeError(
+                    "Could not create container from image '%s'. Did you run `di build`?" % image)
+            # Copy out the passwd and group files, mount them, and append the necessary information
+            for filename in ['passwd', 'group']:
+                path = os.path.join(self.tempdir.name, filename)
+                subprocess.check_call([
+                    configuration['docker'], 'cp', '%s:/etc/%s' % (name, filename), path])
+                util.set_default(configuration, '/run/mount', []).append({
+                    'type': 'bind',
+                    'source': path,
+                    'destination': '/etc/%s' % filename
+                })
+                with open(path, 'a') as fp:
+                    variables = {
+                        'user': user.pw_name,
+                        'uid': user.pw_uid,
+                        'group': group.gr_name,
+                        'gid': group.gr_gid
+                    }
+                    if filename == 'passwd':
+                        line = "%(user)s:x:%(uid)d:%(gid)d:%(user)s:/%(user)s:/bin/sh\n" % variables
+                    else:
+                        line = "%(group)s:x:%(gid)d:%(user)s\n" % variables
+                    fp.write(line)
+                assert os.path.isfile(path)
 
-        # Destroy the container
-        subprocess.check_call(['docker', 'rm', name])
+            # Destroy the container
+            subprocess.check_call(['docker', 'rm', name])
 
         return configuration
 

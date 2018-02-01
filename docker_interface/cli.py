@@ -16,8 +16,6 @@ import argparse
 import json
 import logging
 
-import jsonschema
-
 from .plugins import Plugin, BasePlugin
 from . import util
 
@@ -49,11 +47,11 @@ def entry_point(args=None, configuration=None):
                     plugin_cls[name.lower()].ENABLED = True
                 for name in plugins.get('disable', []):
                     plugin_cls[name.lower()].ENABLED = False
-            except KeyError as ex:
+            except KeyError as ex:  # pragma: no cover
                 logger.fatal("could not resolve plugin %s. Available plugins: %s",
                              ex, ", ".join(plugin_cls))
                 return 2
-        elif plugins is not None:
+        elif plugins is not None:  # pragma: no cover
             logger.fatal("'plugins' must be a `list`, `dict`, or `None` but got `%s`",
                          type(plugins))
             return 2
@@ -86,7 +84,7 @@ def entry_point(args=None, configuration=None):
             configuration = plugin.apply(configuration, schema, args)
             assert configuration is not None, "plugin '%s' returned `None`" % plugin
         except Exception as ex:  # pragma: no cover
-            logger.fatal("failed to apply plugin '%s': %s", plugin, ex)
+            logger.exception("failed to apply plugin '%s': %s", plugin, ex)
             message = "please rerun the command using `di --log-level debug` and file a new " \
                       "issue containing the output of the command here: https://github.com/" \
                       "spotify/docker_interface/issues/new"
@@ -97,3 +95,5 @@ def entry_point(args=None, configuration=None):
     for plugin in reversed(plugins):
         logger.debug("tearing down plugin '%s'", plugin)
         plugin.cleanup()
+
+    return configuration
