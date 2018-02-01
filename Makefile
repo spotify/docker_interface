@@ -8,7 +8,7 @@ BUILDDIR      = docs/_build
 tests : code_tests
 
 code_tests :
-	py.test --cov docker_interface --cov-report=html --cov-report=term-missing -v
+	py.test --cov docker_interface --cov-report=html --cov-report=term-missing -v --durations=10
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
