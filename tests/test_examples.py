@@ -4,7 +4,8 @@ import docker_interface.cli
 
 
 @pytest.fixture(params=[
-    ('cython', ['python', '-c', '"add_two_numbers(1, 2)"'])
+    ('cython', ['python', '-c', '"add_two_numbers(1, 2)"']),
+    ('ports', ['python bind_to_port.py']),
 ])
 def example_definition(request):
     return request.param
