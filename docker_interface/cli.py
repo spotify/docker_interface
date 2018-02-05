@@ -98,4 +98,4 @@ def entry_point(args=None, configuration=None):
         logger.debug("tearing down plugin '%s'", plugin)
         plugin.cleanup()
 
-    return status_code
+    return configuration.get('status_code', status_code)

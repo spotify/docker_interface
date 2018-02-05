@@ -133,7 +133,7 @@ class ExecutePlugin(Plugin):
     def apply(self, configuration, schema, args):
         super(ExecutePlugin, self).apply(configuration, schema, args)
         parts = self.build_command(configuration)
-        self.execute_command(parts, configuration['dry-run'])
+        configuration['status_code'] = self.execute_command(parts, configuration['dry-run'])
         return configuration
 
     def execute_command(self, parts, dry_run):
