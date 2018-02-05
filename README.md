@@ -15,3 +15,12 @@ To check that Docker Interface was installed successfully, run
 ```
 di --help
 ```
+
+## Using Docker Interface
+
+Docker Interface can be invoked from the command line. By default, it reads the configuration from the file `di.yml` in the current working directory and supports two commands:
+
+* `build` builds a Docker image according to the configuration
+* `run` runs a Docker command in a container
+
+You can find specific examples in the `examples` folder in this repository. See readthedocs.org [link to be added once public] for more detailed documentation, and check the schema [link to be added once public] to get a comprehensive overview of the declarative syntax supported by Docker Interface.
