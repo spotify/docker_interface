@@ -12,13 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from setuptools import setup, find_packages
-from Cython.Build import cythonize
+import contextlib
+import socket
 
-ext_modules = cythonize('cython_example/*.pyx')
 
-setup(
-    name='cython_example',
-    version='0.1',
-    ext_modules=ext_modules,
-)
+with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as _socket:
+    _socket.bind(('127.0.0.1', 8888))
+    print("Successfully bound to port 8888.")

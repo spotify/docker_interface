@@ -77,6 +77,7 @@ def entry_point(args=None, configuration=None):
     util.set_default_from_schema(configuration, schema)
 
     # Apply all the plugins in order
+    status_code = 0
     logger.debug("configuration:\n%s", json.dumps(configuration, indent=4))
     for plugin in plugins:
         logger.debug("applying plugin '%s'", plugin)
@@ -89,6 +90,7 @@ def entry_point(args=None, configuration=None):
                       "issue containing the output of the command here: https://github.com/" \
                       "spotify/docker_interface/issues/new"
             logger.fatal("\033[%dm%s\033[0m", 31, message)
+            status_code = 3
             break
         logger.debug("configuration:\n%s", json.dumps(configuration, indent=4))
 
@@ -96,4 +98,4 @@ def entry_point(args=None, configuration=None):
         logger.debug("tearing down plugin '%s'", plugin)
         plugin.cleanup()
 
-    return configuration
+    return configuration.get('status_code', status_code)
