@@ -26,7 +26,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'jsonschema==2.6.0',
-        'pyaml==17.10.0',
+        'PyYAML==3.12',
     ],
     entry_points={
         'console_scripts': [
