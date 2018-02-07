@@ -133,7 +133,7 @@ class ExecutePlugin(Plugin):
     def apply(self, configuration, schema, args):
         super(ExecutePlugin, self).apply(configuration, schema, args)
         parts = self.build_command(configuration)
-        configuration['status_code'] = self.execute_command(parts, configuration['dry-run'])
+        configuration['status-code'] = self.execute_command(parts, configuration['dry-run'])
         return configuration
 
     def execute_command(self, parts, dry_run):
@@ -188,6 +188,10 @@ class BasePlugin(Plugin):
                 "type": "boolean",
                 "description": "Whether to just construct the docker command.",
                 "default": False
+            },
+            "status-code": {
+                "type": "integer",
+                "description": "status code returned by docker"
             },
             "plugins": {
                 "oneOf": [
