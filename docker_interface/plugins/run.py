@@ -139,6 +139,10 @@ class RunConfigurationPlugin(Plugin):
                             "additionalProperties": False
                         }
                     },
+                    "runtime": {
+                        "type": "string",
+                        "description": "Runtime to use for this container."
+                    },
                     "tmpfs": {
                         "type": "array",
                         "description": "Mount a tmpfs directory",
