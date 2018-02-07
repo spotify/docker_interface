@@ -54,7 +54,7 @@ def build_docker_run_command(configuration):
 
     parts.extend(build_parameter_parts(
         run, 'user', 'workdir', 'rm', 'interactive', 'tty', 'env-file', 'cpu-shares', 'name',
-        'network', 'label', 'memory', 'entrypoint'
+        'network', 'label', 'memory', 'entrypoint', 'runtime'
     ))
 
     # Add the mounts

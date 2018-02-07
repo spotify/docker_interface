@@ -22,7 +22,7 @@ PLUGINS = [
 
 setup(
     name="docker_interface",
-    version="0.2.6",
+    version="0.2.7",
     packages=find_packages(),
     install_requires=[
         'jsonschema==2.6.0',
