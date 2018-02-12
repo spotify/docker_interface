@@ -1,6 +1,17 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
+# Copyright 2018 Spotify AB
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 # docker_interface documentation build configuration file, created by
 # sphinx-quickstart on Thu Dec  7 18:55:35 2017.
 #
@@ -20,7 +31,6 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
-
 
 # -- General configuration ------------------------------------------------
 
@@ -82,7 +92,6 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
-
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -113,12 +122,10 @@ html_sidebars = {
     ]
 }
 
-
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'docker_interfacedoc'
-
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -148,7 +155,6 @@ latex_documents = [
      'Till Hoffmann', 'manual'),
 ]
 
-
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
@@ -157,7 +163,6 @@ man_pages = [
     (master_doc, 'docker_interface', 'docker_interface Documentation',
      [author], 1)
 ]
-
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -169,9 +174,6 @@ texinfo_documents = [
      author, 'docker_interface', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
