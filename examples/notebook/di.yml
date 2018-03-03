@@ -1,0 +1,6 @@
+build:
+  tag: jupyter-example
+run:
+  cmd:
+    - jupyter
+    - notebook
