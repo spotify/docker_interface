@@ -42,6 +42,22 @@ class Plugin:
     def add_argument(self, parser, path, name=None, schema=None, **kwargs):
         """
         Add an argument to the `parser` based on a schema definition.
+
+        Parameters
+        ----------
+        parser : argparse.ArgumentParser
+            parser to add an argument to
+        path : str
+            path in the configuration document to add an argument for
+        name : str or None
+            name of the command line parameter (defaults to the name in the schema)
+        schema : dict
+            JSON schema definition (defaults to the schema of the plugin)
+
+        Returns
+        -------
+        arg :
+            command line argument definition
         """
         schema = schema or self.SCHEMA
         name = name or ('--%s' % os.path.basename(path))
@@ -63,12 +79,36 @@ class Plugin:
     def add_arguments(self, parser):
         """
         Add arguments to the parser.
+
+        Inheriting plugins should implement this method to add parameters to the command line
+        parser.
+
+        Parameters
+        ----------
+        parser : argparse.ArgumentParser
+            parser to add arguments to
         """
         pass
 
     def apply(self, configuration, schema, args):
         """
         Apply the plugin to the configuration.
+
+        Inheriting plugins should implement this method to add additional functionality.
+
+        Parameters
+        ----------
+        configuration : dict
+            configuration
+        schema : dict
+            JSON schema
+        args : argparse.NameSpace
+            parsed command line arguments
+
+        Returns
+        -------
+        configuration : dict
+            updated configuration after applying the plugin
         """
         # Set values from the command line
         for name, path in self.arguments.items():
@@ -81,7 +121,12 @@ class Plugin:
     @staticmethod
     def load_plugins():
         """
-        Load plugins.
+        Load all availabe plugins.
+
+        Returns
+        -------
+        plugin_cls : dict
+            mapping from plugin names to plugin classes
         """
         plugin_cls = {}
         for entry_point in pkg_resources.iter_entry_points('docker_interface.plugins'):
@@ -96,6 +141,8 @@ class Plugin:
     def cleanup(self):
         """
         Tear down the plugin and clean up any resources used.
+
+        Inheriting plugins should implement this method to add additional functionality.
         """
         pass
 
@@ -127,6 +174,16 @@ class ExecutePlugin(Plugin):
     def build_command(self, configuration):
         """
         Construct a command and return its parts.
+
+        Parameters
+        ----------
+        configuration : dict
+            configuration
+
+        Returns
+        -------
+        args : list
+            sequence of command line arguments
         """
         raise NotImplementedError
 
@@ -286,10 +343,25 @@ class SubstitutionPlugin(Plugin):
     @classmethod
     def substitute_variables(cls, configuration, value, ref):
         """
-        Substitute varibles in `value` from `configuration` where any path reference is relative to
+        Substitute variables in `value` from `configuration` where any path reference is relative to
         `ref`.
+
+        Parameters
+        ----------
+        configuration : dict
+            configuration (required to resolve intra-document references)
+        value :
+            value to resolve substitutions for
+        ref : str
+            path to `value` in the `configuration`
+
+        Returns
+        -------
+        value :
+            value after substitution
         """
         if isinstance(value, str):
+            # Substitute all intra-document references
             while True:
                 match = cls.REF_PATTERN.search(value)
                 if match is None:
@@ -301,6 +373,7 @@ class SubstitutionPlugin(Plugin):
                 except KeyError:
                     raise KeyError(path)
 
+            # Substitute all variable references
             while True:
                 match = cls.VAR_PATTERN.search(value)
                 if match is None:

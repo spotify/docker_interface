@@ -26,37 +26,111 @@ TYPES = {
 }
 
 
-def split_path(path, ref=None):
+def abspath(path, ref=None):
+    """
+    Create an absolute path.
+
+    Parameters
+    ----------
+    path : str
+        absolute or relative path with respect to `ref`
+    ref : str or None
+        reference path if `path` is relative
+
+    Returns
+    -------
+    path : str
+        absolute path
+
+    Raises
+    ------
+    ValueError
+        if an absolute path cannot be constructed
+    """
     if ref:
         path = os.path.join(ref, path)
-    assert os.path.isabs(path), "expected an absolute path but got '%s'" %  path
+    if not os.path.isabs(path):
+        raise ValueError("expected an absolute path but got '%s'" %  path)
+    return path
+
+
+def split_path(path, ref=None):
+    """
+    Split a path into its components.
+
+    Parameters
+    ----------
+    path : str
+        absolute or relative path with respect to `ref`
+    ref : str or None
+        reference path if `path` is relative
+
+    Returns
+    -------
+    list : str
+        components of the path
+    """
+    path = abspath(path, ref)
     return path.strip(os.path.sep).split(os.path.sep)
 
 
 def get_value(instance, path, ref=None):
     """
     Get the value from `instance` at the given `path`.
+
+    Parameters
+    ----------
+    instance : dict or list
+        instance from which to retrieve a value
+    path : str
+        path to retrieve a value from
+    ref : str or None
+        reference path if `path` is relative
+
+    Returns
+    -------
+    value :
+        value at `path` in `instance`
+
+    Raises
+    ------
+    KeyError
+        if `path` is not valid
+    TypeError
+        if a value along the `path` is not a list or dictionary
     """
     for part in split_path(path, ref):
         if isinstance(instance, list):
             part = int(part)
         elif not isinstance(instance, dict):
-            raise TypeError("expected `list` or `int` but got `%s`" % instance)
-        instance = instance[part]
+            raise TypeError("expected `list` or `dict` but got `%s`" % instance)
+        try:
+            instance = instance[part]
+        except KeyError:
+            raise KeyError(abspath(path, ref))
     return instance
 
 
 def pop_value(instance, path, ref=None):
     """
     Pop the value from `instance` at the given `path`.
+
+    Parameters
+    ----------
+    instance : dict or list
+        instance from which to retrieve a value
+    path : str
+        path to retrieve a value from
+    ref : str or None
+        reference path if `path` is relative
+
+    Returns
+    -------
+    value :
+        value at `path` in `instance`
     """
-    *head, tail = split_path(path, ref)
-    for part in head:
-        if isinstance(instance, list):
-            part = int(part)
-        elif not isinstance(instance, dict):
-            raise TypeError("expected `list` or `int` but got `%s`" % instance)
-        instance = instance[part]
+    head, tail = os.path.split(abspath(path, ref))
+    instance = get_value(instance, head)
     if isinstance(instance, list):
         tail = int(tail)
     return instance.pop(tail)
@@ -65,6 +139,17 @@ def pop_value(instance, path, ref=None):
 def set_value(instance, path, value, ref=None):
     """
     Set `value` on `instance` at the given `path` and create missing intermediate objects.
+
+    Parameters
+    ----------
+    instance : dict or list
+        instance from which to retrieve a value
+    path : str
+        path to retrieve a value from
+    value :
+        value to set
+    ref : str or None
+        reference path if `path` is relative
     """
     *head, tail = split_path(path, ref)
     for part in head:
@@ -75,6 +160,17 @@ def set_value(instance, path, value, ref=None):
 def set_default(instance, path, value, ref=None):
     """
     Set `value` on `instance` at the given `path` and create missing intermediate objects.
+
+    Parameters
+    ----------
+    instance : dict or list
+        instance from which to retrieve a value
+    path : str
+        path to retrieve a value from
+    value :
+        value to set
+    ref : str or None
+        reference path if `path` is relative
     """
     *head, tail = split_path(path, ref)
     for part in head:
@@ -85,6 +181,23 @@ def set_default(instance, path, value, ref=None):
 def merge(x, y):
     """
     Merge two dictionaries and raise an error for inconsistencies.
+
+    Parameters
+    ----------
+    x : dict
+        dictionary x
+    y : dict
+        dictionary y
+
+    Returns
+    -------
+    x : dict
+        merged dictionary
+
+    Raises
+    ------
+    ValueError
+        if `x` and `y` are inconsistent
     """
     keys_x = set(x)
     keys_y = set(y)
@@ -108,6 +221,18 @@ def merge(x, y):
 def set_default_from_schema(instance, schema):
     """
     Populate default values on an `instance` given a `schema`.
+
+    Parameters
+    ----------
+    instance : dict
+        instance to populate default values for
+    schema : dict
+        JSON schema with default values
+
+    Returns
+    -------
+    instance : dict
+        instance with populated default values
     """
     for name, property_ in schema.get('properties', {}).items():
         # Set the defaults at this level of the schema
@@ -122,6 +247,20 @@ def set_default_from_schema(instance, schema):
 def apply(instance, func, path=None):
     """
     Apply `func` to all fundamental types of `instance`.
+
+    Parameters
+    ----------
+    instance : dict
+        instance to apply functions to
+    func : callable
+        function with two arguments (instance, path) to apply to all fundamental types recursively
+    path : str
+        path in the document (defaults to '/')
+
+    Returns
+    -------
+    instance : dict
+        instance after applying `func` to fundamental types
     """
     path = path or os.path.sep
     if isinstance(instance, list):
@@ -138,7 +277,12 @@ def get_free_port(ports=None):
     Parameters
     ----------
     ports : iterable
-        ports to check
+        ports to check (obtain a random port by default)
+
+    Returns
+    -------
+    port : int
+        a free port
     """
     if ports is None:
         with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as _socket:

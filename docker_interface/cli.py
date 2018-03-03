@@ -23,6 +23,19 @@ from . import util
 def entry_point(args=None, configuration=None):
     """
     Standard entry point for the docker interface CLI.
+
+    Parameters
+    ----------
+    args : list or None
+        list of command line arguments or `None` to use `sys.argv`
+    configuration : dict
+        parsed configuration or `None` to load and build a configuration given the command line
+        arguments
+
+    Raises
+    ------
+    SystemExit
+        if the configuration is malformed or the docker subprocesses returns a non-zero status code
     """
     # Parse basic information
     parser = argparse.ArgumentParser('di')

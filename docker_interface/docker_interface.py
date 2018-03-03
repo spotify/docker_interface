@@ -18,6 +18,18 @@ import os
 def build_parameter_parts(configuration, *parameters):
     """
     Construct command parts for one or more parameters.
+
+    Parameters
+    ----------
+    configuration : dict
+        configuration
+    parameters : list
+        list of parameters to create command line arguments for
+
+    Yields
+    ------
+    argument : str
+        command line argument
     """
     for parameter in parameters:
         values = configuration.pop(parameter, [])
@@ -31,7 +43,21 @@ def build_parameter_parts(configuration, *parameters):
 def build_dict_parameter_parts(configuration, *parameters, **defaults):
     """
     Construct command parts for one or more parameters, each of which constitutes an assignment of
-    the form `key = value`.
+    the form `key=value`.
+
+    Parameters
+    ----------
+    configuration : dict
+        configuration
+    parameters : list
+        list of parameters to create command line arguments for
+    defaults : dict
+        default values to use if a parameter is missing
+
+    Yields
+    ------
+    argument : str
+        command line argument
     """
     for parameter in parameters:
         for key, value in configuration.pop(parameter, {}).items():
@@ -41,6 +67,16 @@ def build_dict_parameter_parts(configuration, *parameters, **defaults):
 def build_docker_run_command(configuration):
     """
     Translate a declarative docker `configuration` to a `docker run` command.
+
+    Parameters
+    ----------
+    configuration : dict
+        configuration
+
+    Returns
+    -------
+    args : list
+        sequence of command line arguments to run a command in a container
     """
     parts = configuration.pop('docker').split()
     parts.append('run')
@@ -108,6 +144,16 @@ def build_docker_run_command(configuration):
 def build_docker_build_command(configuration):
     """
     Translate a declarative docker `configuration` to a `docker build` command.
+
+    Parameters
+    ----------
+    configuration : dict
+        configuration
+
+    Returns
+    -------
+    args : list
+        sequence of command line arguments to build an image
     """
     parts = configuration.pop('docker', 'docker').split()
     parts.append('build')
