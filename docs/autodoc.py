@@ -34,7 +34,7 @@ def build_property_tree(schema, depth=0):
             for line in build_property_tree(property_, depth + 4):
                 yield line
 
-
+# Generate the plugin reference
 lines = """
 Plugin reference
 ================
@@ -62,5 +62,27 @@ dirname = os.path.dirname(os.path.abspath(__file__))
 with open(os.path.join(dirname, 'plugin_reference.rst'), 'w') as fp:
     fp.write("\n".join(lines))
 
+# Generate the schema
 with open(os.path.join(dirname, 'schema.json'), 'w') as fp:
     json.dump(schema, fp, indent=4)
+
+# Generate the list of examples
+
+lines = ["""
+Examples
+========
+
+This document lists example use cases for Docker Interface that are available on `GitHub <https://github.com/spotify/docker_interface/tree/master/examples>`_.
+
+"""]
+
+for path in os.listdir('examples'):
+    if os.path.isdir('examples/' + path):
+        header = f'`{path} <https://github.com/spotify/docker_interface/tree/master/examples/{path}>`_'
+        lines.append(header)
+        lines.append('~' * len(header))
+        path = 'examples/%s/README.rst' % path
+        lines.append('.. include:: ../%s' % path)
+
+with open(os.path.join(dirname, 'examples.rst'), 'w') as fp:
+    fp.write("\n".join(lines))

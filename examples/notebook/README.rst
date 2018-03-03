@@ -1,0 +1,1 @@
+This example demonstrates automatic port forwarding for the Jupyter notebook using :code:`di`. Port forwarding is implemented using the :code:`JupyterPlugin` in :code:`docker_interface/plugins/python.py`.

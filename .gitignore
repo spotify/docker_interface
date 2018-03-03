@@ -109,4 +109,5 @@ playground/
 
 docs/plugin_reference.rst
 docs/schema.json
+docs/examples.rst
 /di.yml
