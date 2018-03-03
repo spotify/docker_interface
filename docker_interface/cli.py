@@ -50,11 +50,11 @@ def entry_point(args=None, configuration=None):
             except KeyError as ex:  # pragma: no cover
                 logger.fatal("could not resolve plugin %s. Available plugins: %s",
                              ex, ", ".join(plugin_cls))
-                return 2
+                raise SystemExit(2)
         elif plugins is not None:  # pragma: no cover
             logger.fatal("'plugins' must be a `list`, `dict`, or `None` but got `%s`",
                          type(plugins))
-            return 2
+            raise SystemExit(2)
 
     # Restrict plugins to enabled ones
     plugins = list(sorted([cls() for cls in plugin_cls.values() if cls.ENABLED],
@@ -98,4 +98,6 @@ def entry_point(args=None, configuration=None):
         logger.debug("tearing down plugin '%s'", plugin)
         plugin.cleanup()
 
-    return configuration.get('status-code', status_code)
+    status_code = configuration.get('status-code', status_code)
+    if status_code:
+        raise SystemExit(status_code)

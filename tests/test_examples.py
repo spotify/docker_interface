@@ -18,8 +18,8 @@ import docker_interface.cli
 
 
 @pytest.fixture(params=[
-    ('cython', ['python', '-c', '"add_two_numbers(1, 2)"']),
-    ('ports', ['python bind_to_port.py']),
+    ('cython', ['python', '-c', '"add_two_numbers(1, 2)"'], True),
+    ('ports', ['python', 'bind_to_port.py'], False),
 ])
 def example_definition(request):
     return request.param
@@ -27,10 +27,12 @@ def example_definition(request):
 
 @pytest.fixture
 def build_image(example_definition):
-    di.cli.entry_point(['-f', 'examples/%s/di.yml' % example_definition[0], 'build'])
+    # Only build the image if desired
+    if example_definition[2]:
+        di.cli.entry_point(['-f', 'examples/%s/di.yml' % example_definition[0], 'build'])
     return example_definition
 
 
 def test_command(build_image):
-    example, command = build_image
+    example, command, _ = build_image
     di.cli.entry_point(['-f', 'examples/%s/di.yml' % example, 'run'] + command)

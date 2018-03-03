@@ -157,7 +157,11 @@ class ExecutePlugin(Plugin):
             return 0
         else:  # pragma: no cover
             self.logger.debug("executing command '%s'", " ".join(map(str, parts)))
-            return os.spawnvpe(os.P_WAIT, parts[0], parts, os.environ)
+            status_code = os.spawnvpe(os.P_WAIT, parts[0], parts, os.environ)
+            if status_code:
+                self.logger.warning("command '%s' returned status code %d",
+                                    " ".join(map(str, parts)), status_code)
+            return status_code
 
 
 class BasePlugin(Plugin):

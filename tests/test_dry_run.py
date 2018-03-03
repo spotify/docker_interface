@@ -29,4 +29,5 @@ def test_cli(configuration, command):
     assert configuration is not None
     configuration['dry-run'] = True
     configuration['workspace'] = '.'
-    assert cli.entry_point([command], configuration) == 0
+    # Run the command
+    cli.entry_point([command], configuration)
