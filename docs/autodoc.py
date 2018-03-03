@@ -72,7 +72,7 @@ lines = ["""
 Examples
 ========
 
-This document lists example use cases for Docker Interface that are available on `GitHub <https://github.com/spotify/docker_interface/tree/master/examples>`_.
+This document lists example use cases for Docker Interface that are available on `GitHub <https://github.com/spotify/docker_interface/tree/master/examples>`_. Additional, comprehensive examples can be found in the `tests <https://github.com/spotify/docker_interface/tree/master/tests/configurations>`_.
 
 """]
 

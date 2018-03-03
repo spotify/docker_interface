@@ -13,15 +13,15 @@
 # limitations under the License.
 
 import glob
-import json
+import yaml
 from docker_interface import cli
 import pytest
 
 
-@pytest.fixture(params=glob.glob('tests/configurations/*.json'))
+@pytest.fixture(params=glob.glob('tests/configurations/*.yml'))
 def configuration(request):
     with open(request.param) as fp:
-        return json.load(fp)
+        return yaml.load(fp)
 
 
 @pytest.mark.parametrize('command', ['build', 'run'])
