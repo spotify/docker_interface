@@ -23,7 +23,7 @@ Docker Interface can be invoked from the command line. By default, it reads the 
 * `build` builds a Docker image according to the configuration
 * `run` runs a Docker command in a container
 
-You can find specific examples in the `examples` folder in this repository. See http://docker-interface.readthedocs.io/en/latest/ for more detailed documentation, and check the schema [link to be added once public] to get a comprehensive overview of the declarative syntax supported by Docker Interface.
+You can find specific examples in the `examples` folder in this repository. See http://docker-interface.readthedocs.io/en/latest/ for more detailed documentation, and check the [schema](http://docker-interface.readthedocs.io/en/latest/schema.html) to get a comprehensive overview of the declarative syntax supported by Docker Interface.
 
 ## Contributing to Docker Interface
 
