@@ -78,7 +78,7 @@ This document lists example use cases for Docker Interface that are available on
 
 for path in os.listdir('../examples'):
     if os.path.isdir('../examples/' + path):
-        header = f'`{path} <https://github.com/spotify/docker_interface/tree/master/examples/{path}>`_'
+        header = '`%s <https://github.com/spotify/docker_interface/tree/master/examples/%s>`_' % (path, path)
         lines.append(header)
         lines.append('~' * len(header))
         path = 'examples/%s/README.rst' % path
