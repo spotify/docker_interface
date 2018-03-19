@@ -22,3 +22,12 @@ clean :
 	rm -rf docs/_build
 
 .PHONY: help Makefile docs/plugin_reference.rst clean tests code_tests
+
+sdist :
+	python setup.py sdist
+
+testpypi : sdist
+	twine upload --repository-url https://test.pypi.org/legacy/dist/docker-interface-*
+
+pypi : sdist
+	twine upload dist/docker_interface-*

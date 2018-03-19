@@ -12,7 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import contextlib
+import datetime
 import os
+import sqlite3
 from .base import Plugin, ExecutePlugin
 
 
@@ -42,4 +45,14 @@ class GoogleContainerRegistryPlugin(ExecutePlugin):
     ENABLED = False
 
     def build_command(self, configuration):
+        filename = os.path.expanduser('~/.config/gcloud/access_tokens.db')
+        if os.path.isfile(filename):
+            with contextlib.closing(sqlite3.connect(filename, detect_types=sqlite3.PARSE_DECLTYPES)) as conn, \
+                contextlib.closing(conn.cursor()) as cursor:
+                cursor.execute("SELECT token_expiry FROM access_tokens")
+                token_expiry, = cursor.fetchone()
+                if token_expiry > datetime.datetime.now() + datetime.timedelta(seconds=30):
+                    self.logger.debug('skipping gcr.io authentication; token is valid until %s',
+                                      token_expiry)
+                    return None
         return ['gcloud', 'docker', '--authorize-only', '--quiet']
