@@ -297,7 +297,7 @@ def get_free_port(ports=None):
                 _socket.bind(('', port))
                 return port
             except socket.error as ex:
-                if ex.errno != 48:
+                if ex.errno not in (48, 98):
                     raise
 
     raise RuntimeError("could not find a free port")

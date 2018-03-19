@@ -190,7 +190,10 @@ class ExecutePlugin(Plugin):
     def apply(self, configuration, schema, args):
         super(ExecutePlugin, self).apply(configuration, schema, args)
         parts = self.build_command(configuration)
-        configuration['status-code'] = self.execute_command(parts, configuration['dry-run'])
+        if parts:
+            configuration['status-code'] = self.execute_command(parts, configuration['dry-run'])
+        else:
+            configuration['status-code'] = 0
         return configuration
 
     def execute_command(self, parts, dry_run):
