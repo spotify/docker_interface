@@ -114,7 +114,7 @@ class Plugin:
         for name, path in self.arguments.items():
             value = getattr(args, name.replace('-', '_'))
             if value is not None:
-                util.set_default(configuration, path, value)
+                util.set_value(configuration, path, value)
 
         return configuration
 
@@ -419,6 +419,7 @@ class WorkspaceMountPlugin(Plugin):
 
     def add_arguments(self, parser):
         self.add_argument(parser, '/run/workspace-dir')
+        self.add_argument(parser, '/run/workdir')
 
     def apply(self, configuration, schema, args):
         super(WorkspaceMountPlugin, self).apply(configuration, schema, args)
