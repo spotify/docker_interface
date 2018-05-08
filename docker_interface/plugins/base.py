@@ -18,7 +18,6 @@ import itertools as it
 import logging
 import os
 import re
-import tempfile
 
 import jsonschema
 import pkg_resources
@@ -456,7 +455,6 @@ class HomeDirPlugin(Plugin):
 
     def apply(self, configuration, schema, args):
         super(HomeDirPlugin, self).apply(configuration, schema, args)
-        self.tempdir = tempfile.TemporaryDirectory(dir='/tmp')
         configuration['run'].setdefault('tmpfs', []).append({
             'destination': '#{/run/env/HOME}',
             'options': ['exec'],
