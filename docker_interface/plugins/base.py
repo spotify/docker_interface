@@ -401,7 +401,7 @@ class WorkspaceMountPlugin(Plugin):
                 "properties": {
                     "workspace-dir": {
                         "type": "string",
-                        "description": 'Path at which to mount the workspace in the container.',
+                        "description": "Path at which to mount the workspace in the container.",
                         "default": "/workspace"
                     },
                     "workdir": {
@@ -437,12 +437,28 @@ class HomeDirPlugin(Plugin):
     """
     ORDER = 520
     COMMANDS = ['run']
+    SCHEMA = {
+        'properties': {
+            'homedir': {
+                'properties': {
+                    'size': {
+                        'description': 'Size of the home directory in bytes.',
+                        'type': 'integer',
+                        'default': 2 ** 30
+                    }
+                },
+                'additionalProperties': False
+            }
+        },
+        'additionalProperties': False
+    }
 
     def apply(self, configuration, schema, args):
         super(HomeDirPlugin, self).apply(configuration, schema, args)
         configuration['run'].setdefault('tmpfs', []).append({
             'destination': '#{/run/env/HOME}',
-            'options': ['exec']
+            'options': ['exec'],
+            'size': util.get_value(configuration, '/homedir/size')
         })
         configuration['run'].setdefault('env', {}).setdefault('HOME', '/${user/name}')
         return configuration

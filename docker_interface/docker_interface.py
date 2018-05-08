@@ -131,6 +131,9 @@ def build_docker_run_command(configuration):
     for tmpfs in run.pop('tmpfs', []):
         destination = tmpfs['destination']
         options = tmpfs.pop('options', [])
+        for key in ['mode', 'size']:
+            if key in tmpfs:
+                options.append('%s=%s' % (key, tmpfs[key]))
         if options:
             destination = "%s:%s" % (destination, ",".join(options))
         parts.extend(['--tmpfs', destination])

@@ -5,6 +5,8 @@ SPHINXPROJ    = docker_interface
 SOURCEDIR     = docs
 BUILDDIR      = docs/_build
 
+all : tests html
+
 tests : code_tests
 
 code_tests :
