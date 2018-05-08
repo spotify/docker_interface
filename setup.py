@@ -27,7 +27,7 @@ with open('README.md') as fp:
 
 setup(
     name="docker_interface",
-    version="0.2.8",
+    version="0.2.9",
     packages=find_packages(),
     install_requires=[
         'jsonschema==2.6.0',
