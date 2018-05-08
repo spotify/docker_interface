@@ -401,7 +401,7 @@ class WorkspaceMountPlugin(Plugin):
                 "properties": {
                     "workspace-dir": {
                         "type": "string",
-                        "description": 'Path at which to mount the workspace in the container.',
+                        "description": "Path at which to mount the workspace in the container.",
                         "default": "/workspace"
                     },
                     "workdir": {

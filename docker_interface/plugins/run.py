@@ -38,10 +38,6 @@ class RunConfigurationPlugin(Plugin):
         "properties": {
             "run": {
                 "properties": {
-                    "cmd": {
-                        "type": "array",
-                        "description": "Commands to execute inside the container."
-                    },
                     "image": {
                         "type": "string",
                         "description": "Image to derive the container from.",

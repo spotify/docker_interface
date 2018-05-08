@@ -20,6 +20,11 @@ PLUGINS = [
     'Jupyter'
 ]
 
+
+with open('README.md') as fp:
+    long_description = fp.read()
+
+
 setup(
     name="docker_interface",
     version="0.2.8",
@@ -42,4 +47,6 @@ setup(
     license="License :: OSI Approved :: Apache Software License",
     description="Declarative interface for building images and running commands in containers "
                 "using Docker.",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
 )
