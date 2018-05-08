@@ -155,6 +155,14 @@ class RunConfigurationPlugin(Plugin):
                                     "items": {
                                         "type": "string"
                                     }
+                                },
+                                "size": {
+                                    "type": "integer",
+                                    "description": "Size of the tmpfs mount in bytes."
+                                },
+                                "mode": {
+                                    "type": "integer",
+                                    "description": "File mode of the tmpfs in octal."
                                 }
                             },
                             "required": [

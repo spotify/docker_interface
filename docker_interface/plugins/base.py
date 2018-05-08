@@ -438,22 +438,29 @@ class HomeDirPlugin(Plugin):
     """
     ORDER = 520
     COMMANDS = ['run']
-
-    def __init__(self):
-        super(HomeDirPlugin, self).__init__()
-        self.tempdir = None
+    SCHEMA = {
+        'properties': {
+            'homedir': {
+                'properties': {
+                    'size': {
+                        'description': 'Size of the home directory in bytes.',
+                        'type': 'integer',
+                        'default': 2 ** 30
+                    }
+                },
+                'additionalProperties': False
+            }
+        },
+        'additionalProperties': False
+    }
 
     def apply(self, configuration, schema, args):
         super(HomeDirPlugin, self).apply(configuration, schema, args)
         self.tempdir = tempfile.TemporaryDirectory(dir='/tmp')
-        configuration['run'].setdefault('mount', []).append({
+        configuration['run'].setdefault('tmpfs', []).append({
             'destination': '#{/run/env/HOME}',
-            'type': 'bind',
-            'source': self.tempdir.name
+            'options': ['exec'],
+            'size': util.get_value(configuration, '/homedir/size')
         })
         configuration['run'].setdefault('env', {}).setdefault('HOME', '/${user/name}')
         return configuration
-
-    def cleanup(self):
-        if self.tempdir:
-            self.tempdir.cleanup()
