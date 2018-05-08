@@ -18,6 +18,7 @@ import itertools as it
 import logging
 import os
 import re
+import tempfile
 
 import jsonschema
 import pkg_resources
@@ -438,11 +439,21 @@ class HomeDirPlugin(Plugin):
     ORDER = 520
     COMMANDS = ['run']
 
+    def __init__(self):
+        super(HomeDirPlugin, self).__init__()
+        self.tempdir = None
+
     def apply(self, configuration, schema, args):
         super(HomeDirPlugin, self).apply(configuration, schema, args)
-        configuration['run'].setdefault('tmpfs', []).append({
+        self.tempdir = tempfile.TemporaryDirectory(dir='/tmp')
+        configuration['run'].setdefault('mount', []).append({
             'destination': '#{/run/env/HOME}',
-            'options': ['exec']
+            'type': 'bind',
+            'source': self.tempdir.name
         })
         configuration['run'].setdefault('env', {}).setdefault('HOME', '/${user/name}')
         return configuration
+
+    def cleanup(self):
+        if self.tempdir:
+            self.tempdir.cleanup()
