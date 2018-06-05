@@ -205,6 +205,11 @@ class RunConfigurationPlugin(Plugin):
                         "description": "Automatically remove the container when it exits",
                         "default": True
                     },
+                    "privileged": {
+                        "type": "boolean",
+                        "description": "Give extended privileges to this container",
+                        "default": False
+                    },
                     "memory": {
                         "type": "string",
                         "description": "Memory limit"
