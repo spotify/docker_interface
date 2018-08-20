@@ -10,7 +10,7 @@ all : tests html
 tests : code_tests
 
 code_tests :
-	py.test --cov docker_interface --cov-report=html --cov-report=term-missing -v --durations=10 -s
+	pytest --cov docker_interface --cov-report=html --cov-report=term-missing -v --durations=10 -s
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
