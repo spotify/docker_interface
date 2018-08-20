@@ -27,11 +27,11 @@ with open('README.md') as fp:
 
 setup(
     name="docker_interface",
-    version="0.2.10",
+    version="0.2.11",
     packages=find_packages(),
     install_requires=[
-        'jsonschema==2.6.0',
-        'PyYAML==3.12',
+        'jsonschema>=2.6.0',
+        'PyYAML>=3.12',
     ],
     entry_points={
         'console_scripts': [
