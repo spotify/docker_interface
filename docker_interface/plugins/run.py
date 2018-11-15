@@ -229,6 +229,13 @@ class RunConfigurationPlugin(Plugin):
                     "user": {
                         "type": "string",
                         "description": "Username or UID (format: <name|uid>[:<group|gid>])"
+                    },
+                    "group-add": {
+                        "type": "array",
+                        "description": "Additional groups to run as.",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 },
                 "additionalProperties": False
