@@ -121,6 +121,7 @@ def build_docker_run_command(configuration):
             parts.append('--env=%s' % key)
         else:
             parts.append('--env=%s=%s' % (key, value))
+    parts.append('--env=DOCKER_INTERFACE=true')
 
     # Forward ports
     for publish in run.pop('publish', []):
