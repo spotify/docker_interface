@@ -20,6 +20,7 @@ import docker_interface.cli
 @pytest.fixture(params=[
     ('cython', ['python', '-c', '"add_two_numbers(1, 2)"'], True),
     ('ports', ['python', 'bind_to_port.py'], False),
+    ('env', ['python', 'check_env_var.py'], False),
 ])
 def example_definition(request):
     return request.param

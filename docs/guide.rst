@@ -66,6 +66,6 @@ and modify your :code:`di.yml` configuration to read:
    build:
      tag: my-ipython
 
-Running :code:`di build` from the command line will build your image, and :code:`di run ipython` will run the :code:`ipython` command inside the container. Unless otherwise specified, Docker Interface uses the image built in the :code:`build` step to start a new container when you use the :code:`run` command.
+Running :code:`di build` from the command line will build your image, and :code:`di run ipython` will run the :code:`ipython` command inside the container. Unless otherwise specified, Docker Interface uses the image built in the :code:`build` step to start a new container when you use the :code:`run` command. Note: the :code:`run` command also sets the environment variable :code:`DOCKER_INTERFACE=true` which allows you to dynamically detect when running under the control of :code:`di`.
 
 A comprehensive list of variables that can be set in the :code:`di.yml` configuration can be found in the :doc:`plugin_reference`.
