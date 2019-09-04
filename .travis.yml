@@ -6,11 +6,10 @@ python:
 - '3.6'
 cache: pip
 install:
-- pip install pipenv
-- pipenv install --ignore-pipfile --dev
+- pip install -r requirements.txt
 script:
-- pipenv run make tests
-- pipenv run make html
+- make tests
+- make html
 deploy:
   provider: pypi
   skip_existing: true
