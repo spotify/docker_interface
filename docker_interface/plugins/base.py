@@ -305,7 +305,7 @@ class BasePlugin(Plugin):
         if configuration is None and os.path.isfile(args.file):
             filename = os.path.abspath(args.file)
             with open(filename) as fp:  # pylint: disable=invalid-name
-                configuration = yaml.load(fp)
+                configuration = yaml.safe_load(fp)
             self.logger.debug("loaded configuration from '%s'", filename)
             dirname = os.path.dirname(filename)
             configuration['workspace'] = os.path.join(dirname, configuration.get('workspace', '.'))
