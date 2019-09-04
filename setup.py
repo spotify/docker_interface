@@ -27,12 +27,20 @@ with open('README.md') as fp:
 
 setup(
     name="docker_interface",
-    version="0.4.0",
+    version="0.4.1",
     packages=find_packages(),
     install_requires=[
         'jsonschema>=2.6.0',
         'PyYAML>=3.12',
     ],
+    extras_require={
+        'tests': [
+            "pytest>=3.3.1",
+            "pytest-cov>=2.5.1",
+            "Sphinx>=1.6.5",
+            "sphinx_rtd_theme>=0.2.4",
+        ]
+    },
     entry_points={
         'console_scripts': [
             'di = docker_interface.cli:entry_point'

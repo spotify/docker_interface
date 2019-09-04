@@ -33,3 +33,6 @@ testpypi : sdist
 
 pypi : sdist
 	twine upload dist/docker_interface-*
+
+requirements.txt : requirements.in setup.py
+	pip-compile --upgrade $<

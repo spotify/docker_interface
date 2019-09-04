@@ -21,7 +21,7 @@ import pytest
 @pytest.fixture(params=glob.glob('tests/configurations/*.yml'))
 def configuration(request):
     with open(request.param) as fp:
-        return yaml.load(fp)
+        return yaml.safe_load(fp)
 
 
 @pytest.mark.parametrize('command', ['build', 'run'])
