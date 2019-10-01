@@ -21,7 +21,7 @@ Docker Interface can be invoked from the command line. By default, it reads the 
 
 ```yaml
 build:
-  tag: name-of-your-container
+  tag: name-of-your-image
 ```
 
 Docker interface supports two commands:
