@@ -33,7 +33,8 @@ class JupyterPlugin(Plugin):
         # Check whether the user is starting a notebook
         if cmd and cmd[0] == 'jupyter' and cmd[1] in ('notebook', 'lab'):
             # Don't try to start a browser
-            cmd.append('--no-browser')
+            if '--no-browser' not in cmd:
+                cmd.append('--no-browser')
             # Open the standard port for the notebook
             free_port = get_free_port(range(8888, 9999))
             configuration['run'].setdefault('publish', []).append({
