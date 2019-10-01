@@ -67,14 +67,12 @@ class Plugin:
         path = os.path.sep.join(
             it.chain([os.path.sep], *zip(it.repeat("properties"), path)))
         property_ = util.get_value(schema, path)
-        defaults = {
-            'choices': property_.get('enum'),
-            'help': property_.get('description')
-        }
-        if 'type' in property_:
-            defaults['type'] = util.TYPES[property_['type']]
-        defaults.update(kwargs)
-        return parser.add_argument(name, **defaults)
+        kwargs.setdefault('choices', property_.get('enum'))
+        kwargs.setdefault('help', property_.get('description'))
+        type_ = property_.get('type')
+        if type_:
+            kwargs.setdefault('type', util.TYPES[type_])
+        return parser.add_argument(name, **kwargs)
 
     def add_arguments(self, parser):
         """
