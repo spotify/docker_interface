@@ -236,6 +236,10 @@ class RunConfigurationPlugin(Plugin):
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "gpus": {
+                        "type": "string",
+                        "description": "Visible GPUs.",
                     }
                 },
                 "additionalProperties": False
