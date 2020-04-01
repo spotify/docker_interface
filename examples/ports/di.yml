@@ -3,5 +3,3 @@ run:
   publish:
     - container: 8888
       host: 9999
-    - container: 10000-10010
-      host: 10000-10010
