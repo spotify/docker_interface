@@ -236,6 +236,10 @@ class RunConfigurationPlugin(Plugin):
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "gpus": {
+                        "type": "string",
+                        "description": "GPU devices to add to the container (‘all’ to pass all GPUs)",
                     }
                 },
                 "additionalProperties": False
