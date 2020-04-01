@@ -239,7 +239,7 @@ class RunConfigurationPlugin(Plugin):
                     },
                     "gpus": {
                         "type": "string",
-                        "description": "Visible GPUs.",
+                        "description": "GPU devices to add to the container (‘all’ to pass all GPUs)",
                     }
                 },
                 "additionalProperties": False
