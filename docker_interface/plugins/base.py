@@ -431,32 +431,17 @@ class WorkspaceMountPlugin(Plugin):
 
 class HomeDirPlugin(Plugin):
     """
-    Mount an ephemeral home directory in the container.
+    Mount a home directory placed in the current directory.
     """
     ORDER = 520
     COMMANDS = ['run']
-    SCHEMA = {
-        'properties': {
-            'homedir': {
-                'properties': {
-                    'size': {
-                        'description': 'Size of the home directory in bytes.',
-                        'type': 'integer',
-                        'default': 2 ** 30
-                    }
-                },
-                'additionalProperties': False
-            }
-        },
-        'additionalProperties': False
-    }
 
     def apply(self, configuration, schema, args):
         super(HomeDirPlugin, self).apply(configuration, schema, args)
-        configuration['run'].setdefault('tmpfs', []).append({
+        configuration['run'].setdefault('mount', []).append({
             'destination': '#{/run/env/HOME}',
-            'options': ['exec'],
-            'size': util.get_value(configuration, '/homedir/size')
+            'source': '#{/workspace}/.di/home',
+            'type': 'bind',
         })
         configuration['run'].setdefault('env', {}).setdefault('HOME', '/${user/name}')
         return configuration
